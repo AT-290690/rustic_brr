@@ -12,7 +12,7 @@ fn main() {
   let items = vec![1, 2, 3, 4, 5];
   let mut bin_arr = binary_array::create_binary_array();
   binary_array::fill(&mut bin_arr, items);
-  println!("{:?}", binary_array::offset_rigth(&bin_arr));
+  println!("{:?}", binary_array::offset_right(&bin_arr));
   println!("{:?}", binary_array::offset_left(&bin_arr));
   println!("{:?}", bin_arr);
   println!("{:?}", binary_array::get(&bin_arr, 0));
@@ -93,9 +93,11 @@ loop {
 println!("perform {} removal operations at the start", amount);
 println!("{:?}", bench_arr);
 println!("{:?}", binary_array::length(&bench_arr));
+println!("{:?}", binary_array::offset_left(&bench_arr));
+println!("{:?}", binary_array::offset_right(&bench_arr));
 
 // let mut poor_vec = Vec::new();
-// loop {
+// loop {rig
 //   poor_vec.push(1);
 //   idx += 1;
 //   if idx == amount {
