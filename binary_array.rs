@@ -1,6 +1,6 @@
 type Item = i8;
-type UnsignedSize = u128;
-type SignedSize = i128;
+type UnsignedSize = u32;
+type SignedSize = i32;
 
 fn empty () -> Item { -1 }
 pub struct BinaryArray {
