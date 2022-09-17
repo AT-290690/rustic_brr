@@ -162,7 +162,7 @@ pub fn balance(entity: &mut BinaryArray) -> &mut BinaryArray {
 pub fn fill(entity: &mut BinaryArray, items:Vec<Item>) -> &mut BinaryArray {
   clear(entity);
   let len = items.len();
-  let half =((len / 2) as f64).floor() as usize;
+  let half = ((len / 2) as f64).floor() as usize;
   if half == 0 { return entity }
   let mut left = half - 1;
   let mut right = half;
