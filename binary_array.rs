@@ -1,11 +1,13 @@
+type Item = i8;
+fn empty() -> Item { -1 }
 pub struct BinaryArray {
-  pub left: Vec<i32>,
-  pub right: Vec<i32>,
+  pub left: Vec<Item>,
+  pub right: Vec<Item>,
 }
 pub fn clear (entity: &mut BinaryArray) {
   entity.left.clear();
   entity.right.clear();
-  entity.left.push(-1);
+  entity.left.push(empty());
 }
 pub fn length (entity: &BinaryArray) -> u128 {
   return entity.left.len() as u128 + entity.right.len() as u128 - 1;
@@ -16,7 +18,7 @@ pub fn offset_left (entity: &BinaryArray) -> i32{
 pub fn offset_rigth (entity: &BinaryArray) -> i32{
   return entity.right.len() as i32;
 }
-fn check_bounds_and_get (idx: usize, entity: &BinaryArray) -> Option<i32> {
+fn check_bounds_and_get (idx: usize, entity: &BinaryArray) -> Option<Item> {
   let len = length(entity);
   if idx as u128 >= len  { return None }
   else {
@@ -29,7 +31,7 @@ fn check_bounds_and_get (idx: usize, entity: &BinaryArray) -> Option<i32> {
     } 
   }
 }
-fn check_bounds_and_set (idx: usize, entity: &mut BinaryArray, val:i32) -> Option<i32> {
+fn check_bounds_and_set (idx: usize, entity: &mut BinaryArray, val:Item) -> Option<Item> {
   let len = length(entity);
   if idx as u128 > len  { return None }
   else {
@@ -45,22 +47,22 @@ fn check_bounds_and_set (idx: usize, entity: &mut BinaryArray, val:i32) -> Optio
     } 
   }
 }
-pub fn get (entity: &BinaryArray, idx: usize) -> i32 {
+pub fn get (entity: &BinaryArray, idx: usize) -> Item {
   match check_bounds_and_get(idx, entity) {
-    None => -1,
+    None => empty(),
     Some(item) => item,
   }
 }
-pub fn set (entity: &mut BinaryArray, idx: usize, val: i32) {
+pub fn set (entity: &mut BinaryArray, idx: usize, val: Item) {
   match check_bounds_and_set(idx, entity, val) {
-    None => -1,
+    None => empty(),
     Some(item) => item,
   };
 }
-fn add_to_left (entity: &mut BinaryArray, item: i32) {
+fn add_to_left (entity: &mut BinaryArray, item: Item) {
   entity.left.push(item);
 }
-fn add_to_right (entity: &mut BinaryArray, item: i32)  {
+fn add_to_right (entity: &mut BinaryArray, item: Item)  {
   entity.right.push(item);
 }
 fn remove_from_left (entity: &mut BinaryArray) {
@@ -81,8 +83,8 @@ fn remove_from_right (entity: &mut BinaryArray) {
     }
   }
 }
-pub fn to_vec (entity: &BinaryArray) -> Vec<i32> {
-  let mut out:Vec<i32> = Vec::new();
+pub fn to_vec (entity: &BinaryArray) -> Vec<Item> {
+  let mut out:Vec<Item> = Vec::new();
   let len = length(entity);
   if len == 0 { return out }
   for idx in 0..len {
@@ -90,11 +92,11 @@ pub fn to_vec (entity: &BinaryArray) -> Vec<i32> {
   }
   return out;
 }
-pub fn append (entity: &mut BinaryArray, item: i32) -> &mut BinaryArray {
+pub fn append (entity: &mut BinaryArray, item: Item) -> &mut BinaryArray {
   add_to_right(entity, item);
   return entity;
 }
-pub fn prepend (entity: &mut BinaryArray, item: i32)-> &mut BinaryArray {
+pub fn prepend (entity: &mut BinaryArray, item: Item)-> &mut BinaryArray {
   add_to_left (entity, item);
   return entity;
 }
@@ -110,7 +112,7 @@ pub fn tail (entity: &mut BinaryArray, ) -> &mut BinaryArray {
 }
 pub fn create_binary_array () -> BinaryArray {
   return BinaryArray {
-    left: vec![0],
+    left: vec![-1],
     right: Vec::new()
   };
 }
@@ -119,7 +121,7 @@ pub fn balance (entity: &mut BinaryArray) -> &mut BinaryArray {
   clear(entity);
   return fill(entity, items);
 }
-pub fn fill(entity: &mut BinaryArray, items:Vec<i32>) -> &mut BinaryArray {
+pub fn fill(entity: &mut BinaryArray, items:Vec<Item>) -> &mut BinaryArray {
   let len  = items.len();
   let half = ((len / 2) as f32).floor() as usize;
   if half == 0 { return entity }
