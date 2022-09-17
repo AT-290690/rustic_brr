@@ -96,7 +96,7 @@ pub fn tail (entity: &mut BinaryArray) -> &mut BinaryArray {
   if offset_left(entity) == 0 { return balance(entity) }
   return entity;
 }
-pub fn create_binary_array () -> BinaryArray {
+pub fn make () -> BinaryArray {
   return BinaryArray {
     left: vec![-1],
     right: Vec::new()
