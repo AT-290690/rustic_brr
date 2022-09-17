@@ -68,10 +68,11 @@ fn main() {
   println!("{:?}", bin_arr);
   println!("{:?}", binary_array::get(&bin_arr, 0));
   println!("{:?}", binary_array::to_vec(&bin_arr));
-
+  
+// binary_array
 let mut bench_arr = binary_array::create_binary_array();
 let mut idx:usize = 0;
-let amount = 1000000;
+let amount = 300000;
 loop {
   binary_array::append(&mut bench_arr, 1);
   idx += 1;
@@ -81,7 +82,9 @@ loop {
 }
 binary_array::balance(&mut bench_arr);
 println!("binary array of size {:?}", binary_array::length(&bench_arr));
-
+let mid = ((binary_array::length(&bench_arr) / 2) as f64).floor() as usize;
+println!("set element at the middle {:?}",binary_array::set(&mut bench_arr, mid, 42));
+println!("get element from the middle {:?}",binary_array::get(&bench_arr, mid));
 let mut idx_bench:usize = 0;
 loop {
   binary_array::head(&mut bench_arr);
@@ -96,18 +99,24 @@ println!("{:?}", binary_array::length(&bench_arr));
 println!("{:?}", binary_array::offset_left(&bench_arr));
 println!("{:?}", binary_array::offset_right(&bench_arr));
 
+// vector
+
+// idx_bench = 0;
 // let mut poor_vec = Vec::new();
-// loop {rig
+// loop {
 //   poor_vec.push(1);
-//   idx += 1;
-//   if idx == amount {
+//   idx_bench += 1;
+//   if idx_bench == amount {
 //     break
 //   }
 // }
 // let mut idx_bench:usize = 0;
+// println!("vector of size {}", poor_vec.len());
 // loop {
-//   poor_vec.remove(0);
 //   idx_bench += 1;
+//   if poor_vec.len() > 0{
+//     poor_vec.remove(0);
+//   }
 //   if idx_bench == amount {
 //     break
 //   }
