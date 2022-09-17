@@ -126,14 +126,14 @@ pub fn prepend(entity: &mut BinaryArray, item: Item)-> &mut BinaryArray {
   return entity;
 }
 
-/* remove item at from end in O(1) armortized */
+/* pull it by the tail - remove item from end in O(1) armortized */
 pub fn tail(entity: &mut BinaryArray) -> &mut BinaryArray {
   remove_from_left(entity);  
   if offset_left(entity) == 0 { return balance(entity) }
   return entity;
 }
 
-/* remove item at from start in O(1) armortized */
+/* pull it by the head - remove item from start in O(1) armortized */
 pub fn head(entity: &mut BinaryArray) -> &mut BinaryArray {
   remove_from_right(entity);
   if offset_right(entity) == 0 { return balance(entity) }
