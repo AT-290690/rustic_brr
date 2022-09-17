@@ -64,7 +64,10 @@ fn main() {
   println!("{:?}", binary_array::get(&bin_arr, 2));
   println!("{:?}", binary_array::get(&bin_arr, 3));
   println!("{:?}", binary_array::get(&bin_arr, 4));
-
+  binary_array::prepend(&mut bin_arr, 42);
+  println!("{:?}", bin_arr);
+  println!("{:?}", binary_array::get(&bin_arr, 0));
+  println!("{:?}", binary_array::to_vec(&bin_arr));
 
 let mut bench_arr = binary_array::create_binary_array();
 let mut idx:usize = 0;
