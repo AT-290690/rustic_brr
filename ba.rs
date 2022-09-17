@@ -140,7 +140,7 @@ pub fn head(entity: &mut BinaryArray) -> &mut BinaryArray {
   return entity;
 }
 
-/* convert to vec  */
+/* convert to vec */
 pub fn to_vec(entity: &BinaryArray) -> Vec<Item> {
   let mut out:Vec<Item> = Vec::new();
   let len = length(entity);
@@ -149,7 +149,7 @@ pub fn to_vec(entity: &BinaryArray) -> Vec<Item> {
   return out;
 }
 
-/* balance O(N)  */
+/* balance O(N) */
 pub fn balance(entity: &mut BinaryArray) -> &mut BinaryArray {
   let items = to_vec(entity);
   return fill(entity, items);
