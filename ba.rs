@@ -20,7 +20,7 @@ pub struct BinaryArray {
 */
 pub fn make() -> BinaryArray {
   return BinaryArray {
-    left: vec![-1],
+    left: vec![empty()],
     right: Vec::new()
   }
 }
