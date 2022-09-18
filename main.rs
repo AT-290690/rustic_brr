@@ -1,6 +1,8 @@
-mod ba;
+mod binary_array;
+use binary_array as Barr;
+
 use std::fmt;
-impl fmt::Debug for ba::BinaryArray {
+impl fmt::Debug for Barr::BinaryArray {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
     f.debug_struct("BinaryArray")
      .field("left", &self.left)
@@ -10,85 +12,85 @@ impl fmt::Debug for ba::BinaryArray {
 }
 fn main() {
   let items = vec![1, 2, 3, 4, 5];
-  let mut bin_arr = ba::make();
-  ba::fill(&mut bin_arr, items);
-  println!("{:?}", ba::offset_right(&bin_arr));
-  println!("{:?}", ba::offset_left(&bin_arr));
+  let mut bin_arr = Barr::new();
+  Barr::fill(&mut bin_arr, items);
+  println!("{:?}", Barr::offset_right(&bin_arr));
+  println!("{:?}", Barr::offset_left(&bin_arr));
   println!("{:?}", bin_arr);
-  println!("{:?}", ba::get(&bin_arr, 0));
-  println!("{:?}", ba::get(&bin_arr, 1));
-  println!("{:?}", ba::get(&bin_arr, 2));
-  println!("{:?}", ba::get(&bin_arr, 3));
-  println!("{:?}", ba::get(&bin_arr, 4));
-  println!("{:?}", ba::to_vec(&bin_arr));
-  ba::head(&mut bin_arr);
-  ba::tail(&mut bin_arr);
+  println!("{:?}", Barr::get(&bin_arr, 0));
+  println!("{:?}", Barr::get(&bin_arr, 1));
+  println!("{:?}", Barr::get(&bin_arr, 2));
+  println!("{:?}", Barr::get(&bin_arr, 3));
+  println!("{:?}", Barr::get(&bin_arr, 4));
+  println!("{:?}", Barr::to_vec(&bin_arr));
+  Barr::head(&mut bin_arr);
+  Barr::tail(&mut bin_arr);
   println!("{:?}", bin_arr);
-  println!("{:?}", ba::get(&bin_arr, 2));
-  ba::set(&mut bin_arr, 2, 100);
+  println!("{:?}", Barr::get(&bin_arr, 2));
+  Barr::set(&mut bin_arr, 2, 100);
   println!("{:?}", bin_arr);
-  println!("{:?}", ba::get(&bin_arr, 2));
-  println!("{:?}", ba::to_vec(&bin_arr));
-  println!("{:?}", ba::get(&bin_arr, 0));
-  println!("{:?}", ba::get(&bin_arr, 1));
-  println!("{:?}", ba::get(&bin_arr, 2));
-  ba::tail(&mut bin_arr);
-  ba::tail(&mut bin_arr);
-  ba::tail(&mut bin_arr);
-  ba::tail(&mut bin_arr);
+  println!("{:?}", Barr::get(&bin_arr, 2));
+  println!("{:?}", Barr::to_vec(&bin_arr));
+  println!("{:?}", Barr::get(&bin_arr, 0));
+  println!("{:?}", Barr::get(&bin_arr, 1));
+  println!("{:?}", Barr::get(&bin_arr, 2));
+  Barr::tail(&mut bin_arr);
+  Barr::tail(&mut bin_arr);
+  Barr::tail(&mut bin_arr);
+  Barr::tail(&mut bin_arr);
   println!("{:?}", bin_arr);
-  ba::fill(&mut bin_arr, vec![1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  Barr::fill(&mut bin_arr, vec![1, 2, 3, 4, 5, 6, 7, 8, 9]);
   println!("{:?}", bin_arr);
-  println!("{:?}", ba::to_vec(&bin_arr));
-  ba::head(&mut bin_arr);  
-  ba::head(&mut bin_arr);
-  ba::head(&mut bin_arr);
-  ba::head(&mut bin_arr);
-  ba::head(&mut bin_arr);
-  ba::head(&mut bin_arr);
+  println!("{:?}", Barr::to_vec(&bin_arr));
+  Barr::head(&mut bin_arr);  
+  Barr::head(&mut bin_arr);
+  Barr::head(&mut bin_arr);
+  Barr::head(&mut bin_arr);
+  Barr::head(&mut bin_arr);
+  Barr::head(&mut bin_arr);
   println!("{:?}", bin_arr);
-  println!("{:?}", ba::to_vec(&bin_arr));
-  ba::fill(&mut bin_arr, vec![1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  println!("{:?}", Barr::to_vec(&bin_arr));
+  Barr::fill(&mut bin_arr, vec![1, 2, 3, 4, 5, 6, 7, 8, 9]);
   println!("{:?}", bin_arr);
-  ba::tail(&mut bin_arr);  
-  ba::tail(&mut bin_arr);
-  ba::tail(&mut bin_arr);
-  ba::tail(&mut bin_arr);
-  ba::tail(&mut bin_arr);
-  ba::tail(&mut bin_arr);
-  ba::tail(&mut bin_arr);
+  Barr::tail(&mut bin_arr);  
+  Barr::tail(&mut bin_arr);
+  Barr::tail(&mut bin_arr);
+  Barr::tail(&mut bin_arr);
+  Barr::tail(&mut bin_arr);
+  Barr::tail(&mut bin_arr);
+  Barr::tail(&mut bin_arr);
   println!("{:?}", bin_arr);
-  println!("{:?}", ba::to_vec(&bin_arr));
-  println!("{:?}", ba::get(&bin_arr, 0));
-  println!("{:?}", ba::get(&bin_arr, 1));
-  ba::prepend(&mut bin_arr, 42);
+  println!("{:?}", Barr::to_vec(&bin_arr));
+  println!("{:?}", Barr::get(&bin_arr, 0));
+  println!("{:?}", Barr::get(&bin_arr, 1));
+  Barr::prepend(&mut bin_arr, 42);
   println!("{:?}", bin_arr);
-  println!("{:?}", ba::get(&bin_arr, 0));
-  println!("{:?}", ba::to_vec(&bin_arr));
+  println!("{:?}", Barr::get(&bin_arr, 0));
+  println!("{:?}", Barr::to_vec(&bin_arr));
   
-  let mut my_arr = ba::make();
-  ba::fill(&mut my_arr, vec![1; 1000]);
-  ba::set(&mut my_arr, 512, 9);
-  print!("{:?}", ba::get(&my_arr, 512));
+  let mut my_arr = Barr::new();
+  Barr::fill(&mut my_arr, vec![1; 1000]);
+  Barr::set(&mut my_arr, 512, 9);
+  print!("{:?}", Barr::get(&my_arr, 512));
 
-let mut bench_arr = ba::make();
+let mut bench_arr = Barr::new();
 let mut idx:usize = 0;
 let amount = 300000;
 loop {
-  ba::append(&mut bench_arr, 1);
+  Barr::append(&mut bench_arr, 1);
   idx += 1;
   if idx == amount {
     break
   }
 }
-ba::balance(&mut bench_arr);
-println!("binary array of size {:?}", ba::length(&bench_arr));
-let mid =((ba::length(&bench_arr) / 2) as f64).floor() as usize;
-println!("set element at the middle {:?}",ba::set(&mut bench_arr, mid, 42));
-println!("get element from the middle {:?}",ba::get(&bench_arr, mid));
+Barr::balance(&mut bench_arr);
+println!("binary array of size {:?}", Barr::length(&bench_arr));
+let mid =((Barr::length(&bench_arr) / 2) as f64).floor() as usize;
+println!("set element at the middle {:?}",Barr::set(&mut bench_arr, mid, 42));
+println!("get element from the middle {:?}",Barr::get(&bench_arr, mid));
 let mut idx_bench:usize = 0;
 loop {
-  ba::head(&mut bench_arr);
+  Barr::head(&mut bench_arr);
   idx_bench += 1;
   if idx_bench == amount {
     break
@@ -96,9 +98,9 @@ loop {
 }
 println!("perform {} removal operations at the start", amount);
 println!("{:?}", bench_arr);
-println!("{:?}", ba::length(&bench_arr));
-println!("{:?}", ba::offset_left(&bench_arr));
-println!("{:?}", ba::offset_right(&bench_arr));
+println!("{:?}", Barr::length(&bench_arr));
+println!("{:?}", Barr::offset_left(&bench_arr));
+println!("{:?}", Barr::offset_right(&bench_arr));
 
 idx_bench = 0;
 let mut poor_vec = Vec::new();

@@ -18,7 +18,7 @@ pub struct BinaryArray {
   create new entity
   with initial state
 */
-pub fn make() -> BinaryArray {
+pub fn new() -> BinaryArray {
   return BinaryArray {
     left: vec![empty()],
     right: Vec::new()
