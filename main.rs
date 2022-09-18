@@ -14,8 +14,8 @@ fn main() {
     let items = vec![1, 2, 3, 4, 5];
     let mut bin_arr = Barr::new();
     Barr::fill(&mut bin_arr, items);
-    println!("{:?}", Barr::offset_right(&bin_arr));
-    println!("{:?}", Barr::offset_left(&bin_arr));
+    println!("{:?}", bin_arr.right.len());
+    println!("{:?}", bin_arr.left.len() - 1);
     println!("{:?}", bin_arr);
     assert!(Barr::get(&bin_arr, 0) == 1);
     assert!(Barr::get(&bin_arr, 1) == 2);
@@ -112,12 +112,12 @@ fn main() {
     println!("perform {} removal operations at the start", amount);
     println!("{:?}", bench_arr);
     println!("{:?}", Barr::length(&bench_arr));
-    println!("{:?}", Barr::offset_left(&bench_arr));
-    println!("{:?}", Barr::offset_right(&bench_arr));
+    println!("{:?}", bench_arr.left.len() - 1);
+    println!("{:?}", bench_arr.right.len());
     assert!(
         Barr::length(&bench_arr) == 0
-            && Barr::offset_left(&bench_arr) == 0
-            && Barr::offset_right(&bench_arr) == 0
+            && bench_arr.left.len() - 1 == 0
+            && bench_arr.right.len() == 0
     );
 
     idx_bench = 0;
