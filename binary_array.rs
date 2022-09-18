@@ -1,5 +1,5 @@
 type Item = i8;
-type SignedSize = i32;
+type Size = i32;
 
 /*  Empty / Null value for -0 index left[0] -> -1 */
 fn empty() -> Item {
@@ -45,15 +45,12 @@ pub fn length(entity: &BinaryArray) -> usize {
 pub fn get(entity: &BinaryArray, idx: usize) -> Item {
     let len = length(entity);
     if idx < len {
-        let offset_index = idx as SignedSize + (entity.left.len() - 1) as SignedSize * -1;
-        let index = if offset_index < 0 {
-            offset_index * -1
-        } else {
-            offset_index
-        } as usize;
+        let offset_index = idx as Size + (entity.left.len() - 1) as Size * -1;
         if offset_index >= 0 {
+            let index = offset_index as usize;
             return entity.right[index];
         } else {
+            let index = (offset_index * -1) as usize;
             return entity.left[index];
         }
     } else {
@@ -65,16 +62,13 @@ pub fn get(entity: &BinaryArray, idx: usize) -> Item {
 pub fn set(entity: &mut BinaryArray, idx: usize, val: Item) -> Item {
     let len = length(entity);
     if idx < len {
-        let offset_index = idx as SignedSize + (entity.left.len() - 1) as SignedSize * -1;
-        let index = if offset_index < 0 {
-            offset_index * -1
-        } else {
-            offset_index
-        } as usize;
+        let offset_index = idx as Size + (entity.left.len() - 1) as Size * -1;
         if offset_index >= 0 {
+            let index = offset_index as usize;
             entity.right[index] = val;
             return val;
         } else {
+            let index = (offset_index * -1) as usize;
             entity.left[index] = val;
             return val;
         }
@@ -141,7 +135,7 @@ pub fn to_vec(entity: &BinaryArray) -> Vec<Item> {
         return out;
     }
     for idx in 0..len {
-        out.push(get(entity, idx as usize))
+        out.push(get(entity, idx))
     }
     return out;
 }
