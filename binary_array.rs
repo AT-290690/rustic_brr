@@ -41,21 +41,11 @@ pub fn length(entity: &BinaryArray) -> usize {
     entity.left.len() + entity.right.len() - 1
 }
 
-/* get total amout of items isnerted at the start */
-pub fn offset_left(entity: &BinaryArray) -> usize {
-    entity.left.len() - 1
-}
-
-/* get total amout of items isnerted at the end */
-pub fn offset_right(entity: &BinaryArray) -> usize {
-    entity.right.len()
-}
-
 /* get item at any index in O(1) */
 pub fn get(entity: &BinaryArray, idx: usize) -> Item {
     let len = length(entity);
     if idx < len {
-        let offset_index = idx as SignedSize + offset_left(entity) as SignedSize * -1;
+        let offset_index = idx as SignedSize + (entity.left.len() - 1) as SignedSize * -1;
         let index = if offset_index < 0 {
             offset_index * -1
         } else {
@@ -75,7 +65,7 @@ pub fn get(entity: &BinaryArray, idx: usize) -> Item {
 pub fn set(entity: &mut BinaryArray, idx: usize, val: Item) -> Item {
     let len = length(entity);
     if idx < len {
-        let offset_index = idx as SignedSize + offset_left(entity) as SignedSize * -1;
+        let offset_index = idx as SignedSize + (entity.left.len() - 1) as SignedSize * -1;
         let index = if offset_index < 0 {
             offset_index * -1
         } else {
@@ -118,7 +108,7 @@ pub fn tail(entity: &mut BinaryArray) -> &mut BinaryArray {
             entity.left.pop();
         }
     };
-    if offset_left(entity) == 0 {
+    if entity.left.len() - 1 == 0 {
         return balance(entity);
     }
     return entity;
@@ -137,7 +127,7 @@ pub fn head(entity: &mut BinaryArray) -> &mut BinaryArray {
             entity.right.pop();
         }
     };
-    if offset_right(entity) == 0 {
+    if entity.right.len() == 0 {
         return balance(entity);
     }
     return entity;
