@@ -1,7 +1,7 @@
 # Rustic Brr
 
 <p align="center">
-<img width="50" src="./playground/assets/images/logo.svg"/>
+<img width="50" src="./logo.svg"/>
 </p>
 
 ## Instant array operations
@@ -11,14 +11,18 @@ remove O(1)
 access O(1)  
 memory O(N)
 
+There is a simple benchmark vs vector in main.rs
+cargo run
+cargo test
+
 Structure
 
 ```rust
 let mut brray = Brr::new();
 brray.prepend(-1).prepend(-2).append(100).append(1).append(2).append(3).append(4);
-{ 
+{
   left: [0, -1, -2], // first item in left is unreachable and just there as an offset - defaults to 0 for i32
-  right: [0, 1, 2, 3, 4] 
+  right: [0, 1, 2, 3, 4]
 }
 brray.to_vec() => [-2, -1, 0, 1, 2, 3, 4]
 ```
@@ -43,7 +47,3 @@ Indexing is guaranteed without the need of reordering thanks to simple arithmeti
 
 [0, 1, 2, 3, 4, 5, 6, 7, 8]
 ```
-
-There is a simple benchmark vs vector in main.rs
-
-cargo run
