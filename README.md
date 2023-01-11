@@ -16,7 +16,8 @@ This is Rust version of my JavaScript https://github.com/AT-290690/brrr
 There is a simple benchmark vs vector in main.rs
 (bump up N - Brr goes first and vec second. Diff is noticible the bigger N)
 
-cargo run 
+cargo run
+
 cargo test 
 
 Structure
