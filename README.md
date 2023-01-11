@@ -11,6 +11,8 @@ remove O(1)
 access O(1)  
 memory O(N)
 
+This is Rust version of my JavaScript https://github.com/AT-290690/brrr 
+
 There is a simple benchmark vs vector in main.rs
 cargo run
 cargo test
