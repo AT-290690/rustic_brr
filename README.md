@@ -24,7 +24,7 @@ Structure
 
 ```rust
 let mut brray = Brr::new();
-brray.prepend(-1).prepend(-2).append(100).append(1).append(2).append(3).append(4);
+brray.prepend(-1).prepend(-2).append(0).append(1).append(2).append(3).append(4);
 {
   left: [0, -1, -2], // first item in left is unreachable and just there as an offset - defaults to 0 for i32
   right: [0, 1, 2, 3, 4]
