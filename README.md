@@ -14,8 +14,8 @@ memory O(N)
 This is Rust version of my JavaScript https://github.com/AT-290690/brrr 
 
 There is a simple benchmark vs vector in main.rs
-cargo run
-cargo test
+cargo run 
+cargo test 
 
 Structure
 
@@ -49,3 +49,11 @@ Indexing is guaranteed without the need of reordering thanks to simple arithmeti
 
 [0, 1, 2, 3, 4, 5, 6, 7, 8]
 ```
+How it works? It never adds or removes from the front. 
+Uses 2 vectors and onlt pushes and pops. 
+And keeps constant indexing using the above logic.
+
+Very, very, very rarly it balances the two vectors (Once on every COMPLETE removals of 1 branch vector or... never).
+
+Original vector shifts and unshifts for operations at the start making insertions/deletions O(N) 
+Brr has them in O(1) + keeping the access O(1).
