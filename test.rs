@@ -46,5 +46,22 @@ mod tests {
           assert!(*brr_filter.get(0) == 2);
           assert!(*brr_filter.get(1) == 4);
       }
+
+      {
+        let mut brr_arr = Brr::new();
+        brr_arr.fill(vec![1, 2, 3]);
+        brr_arr.rotate(2, true);
+        assert!(*brr_arr.get(0) == 2);
+        assert!(*brr_arr.get(1) == 3);
+        assert!(*brr_arr.get(2) == 1);
+    }
+    {
+        let mut brr_arr = Brr::new();
+        brr_arr.fill(vec![1, 2, 3]);
+        brr_arr.rotate(2, false);
+        assert!(*brr_arr.get(0) == 3);
+        assert!(*brr_arr.get(1) == 1);
+        assert!(*brr_arr.get(2) == 2);
+    }
     }
 }

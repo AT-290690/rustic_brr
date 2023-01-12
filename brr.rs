@@ -122,6 +122,12 @@ impl<T: Clone + Default> Brr<T> {
         }
         return self;
     }
+    pub fn first (&self) -> &T {
+        return self.get(0)
+    }
+    pub fn last (&self) -> &T {
+        return self.get(self.length() - 1)
+    }
     pub fn map(&mut self, callback: fn(item: &T, index: usize) -> T) -> Brr<T> {
         let mut out:Brr<T> = Brr::new();
         let len = self.length();
@@ -156,4 +162,42 @@ impl<T: Clone + Default> Brr<T> {
         out.balance();
         return out;
     }
+    pub fn rotate_left(&mut self, n: usize) -> &Self {
+        let mut rot = n % self.length();
+            loop {
+            if rot == 0 {
+                break
+            }
+            if self.left.len() - 1 == 0 {
+                self.balance();
+            }
+            self.append(self.first().clone());
+            self.tail();
+            rot = rot -1
+        }
+        return self
+    }
+    pub fn rotate_right(&mut self, n: usize) -> &Self {
+        let mut rot = n % self.length();
+            loop {
+            if rot == 0 {
+                break
+            }
+            if self.right.len() == 0 {
+                self.balance();
+            }
+            self.prepend(self.last().clone());
+            self.head();
+            rot = rot -1
+        }
+        return self
+    }
+    pub fn rotate(&mut self, n:usize, right: bool) -> &Self {
+          if right { 
+            self.rotate_right(n);
+        } else { 
+            self.rotate_left(n);
+        }
+        return self;
+      }
 }
