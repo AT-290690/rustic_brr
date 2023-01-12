@@ -94,11 +94,11 @@ impl<T: Clone + Default> Brr<T> {
         }
         return out;
     }
-    pub fn balance(&mut self) -> &Self {
+    pub fn balance(&mut self) -> &mut Self {
         let items = self.to_vec();
         return self.fill(items);
     }
-    pub fn fill(&mut self, items: Vec<T>) -> &Self {
+    pub fn fill(&mut self, items: Vec<T>) -> &mut Self {
         self.clear();
         let len = items.len();
         let half = ((len / 2) as f64).floor() as usize;
@@ -122,14 +122,14 @@ impl<T: Clone + Default> Brr<T> {
         }
         return self;
     }
-    pub fn first (&self) -> &T {
-        return self.get(0)
+    pub fn first(&self) -> &T {
+        return self.get(0);
     }
-    pub fn last (&self) -> &T {
-        return self.get(self.length() - 1)
+    pub fn last(&self) -> &T {
+        return self.get(self.length() - 1);
     }
     pub fn map(&mut self, callback: fn(item: &T, index: usize) -> T) -> Brr<T> {
-        let mut out:Brr<T> = Brr::new();
+        let mut out: Brr<T> = Brr::new();
         let len = self.length();
         let half = ((len / 2) as f64).floor() as usize;
         let mut left = half - 1;
@@ -156,48 +156,48 @@ impl<T: Clone + Default> Brr<T> {
         for index in 0..self.length() {
             let current = self.get(index);
             if callback(current, index) {
-               out.append(current.clone());
+                out.append(current.clone());
             }
         }
         out.balance();
         return out;
     }
-    pub fn rotate_left(&mut self, n: usize) -> &Self {
+    pub fn rotate_left(&mut self, n: usize) -> &mut Self {
         let mut rot = n % self.length();
-            loop {
+        loop {
             if rot == 0 {
-                break
+                break;
             }
             if self.left.len() - 1 == 0 {
                 self.balance();
             }
             self.append(self.first().clone());
             self.tail();
-            rot = rot -1
+            rot = rot - 1
         }
-        return self
+        return self;
     }
-    pub fn rotate_right(&mut self, n: usize) -> &Self {
+    pub fn rotate_right(&mut self, n: usize) -> &mut Self {
         let mut rot = n % self.length();
-            loop {
+        loop {
             if rot == 0 {
-                break
+                break;
             }
             if self.right.len() == 0 {
                 self.balance();
             }
             self.prepend(self.last().clone());
             self.head();
-            rot = rot -1
+            rot = rot - 1
         }
-        return self
+        return self;
     }
-    pub fn rotate(&mut self, n:usize, right: bool) -> &Self {
-          if right { 
+    pub fn rotate(&mut self, n: usize, right: bool) -> &mut Self {
+        if right {
             self.rotate_right(n);
-        } else { 
+        } else {
             self.rotate_left(n);
         }
         return self;
-      }
+    }
 }
