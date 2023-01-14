@@ -27,6 +27,25 @@ impl<T: Clone + Default> Brr<T> {
         }
         return result;
     }
+    pub fn slice(&self, mut start: i32, mut end: i32) -> Brr<T> {
+        let mut slice = Brr::new();
+        let len = self.length() as i32;
+        if end == 0 {
+            end = len
+        }
+        if start > len - 1 {
+            start = len - 1
+        }
+        let slice_len = end - start;
+        let half = ((slice_len / 2) as f64).floor() as usize;
+        for i in (0..half).rev() {
+            slice.prepend(self.get(start as usize + i).unwrap().clone());
+        }
+        for i in half..slice_len as usize {
+            slice.append(self.get(start as usize + i).unwrap().clone());
+        }
+        return slice;
+    }
     pub fn clear(&mut self) -> &mut Self {
         self.left.clear();
         self.right.clear();
