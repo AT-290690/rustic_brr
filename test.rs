@@ -86,12 +86,12 @@ mod tests {
         }
         {
             fn validate_parens(str: &str) -> bool {
-                let mut b = Brr::new();
+                let mut  input= Brr::new();
                 let str = str.to_string();
-                let input = b.from_vec(str.split("").collect());
                 return input
-                    .filter(|s, _i| *s == "(" || *s == ")")
-                    .transform(|mut stack, paren, _i| {
+                    .from_vec(str.split("").collect())
+                    .filter(|s, _| *s == "(" || *s == ")")
+                    .transform(|mut stack, paren, _| {
                         if *paren == "(" {
                             stack.prepend(paren);
                         } else {

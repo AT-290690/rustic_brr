@@ -266,14 +266,14 @@ impl<T: Clone + Default> Brr<T> {
             let len = length - idx;
             self.rotate_right(len);
             self.append(value);
-            for _i in 0..(len - 1) {
+            for _ in 0..(len - 1) {
                 let item = self.chop();
                 self.append(item);
             }
         } else {
             self.rotate_left(idx);
             self.prepend(value);
-            for _i in 0..idx {
+            for _ in 0..idx {
                 let item = self.cut();
                 self.prepend(item);
             }
@@ -302,7 +302,7 @@ impl<T: Clone + Default> Brr<T> {
             for i in 0..values.len() {
                 self.append(values[i].clone());
             }
-            for _i in 0..len {
+            for _ in 0..len {
                 let item = self.chop();
                 self.append(item);
             }
@@ -311,7 +311,7 @@ impl<T: Clone + Default> Brr<T> {
             for i in 0..values.len() {
                 self.prepend(values[i].clone());
             }
-            for _i in 0..idx {
+            for _ in 0..idx {
                 let item = self.cut();
                 self.prepend(item);
             }
@@ -332,14 +332,14 @@ impl<T: Clone + Default> Brr<T> {
         if is_close_to_right {
             self.rotate_right(len);
             self.head();
-            for _i in 0..len {
+            for _ in 0..len {
                 let item = self.chop();
                 self.append(item);
             }
         } else {
             self.rotate_left(idx);
             self.tail();
-            for _i in 0..idx {
+            for _ in 0..idx {
                 let item = self.cut();
                 self.prepend(item);
             }
@@ -360,19 +360,19 @@ impl<T: Clone + Default> Brr<T> {
         let is_close_to_right = offset_index > 0;
         if is_close_to_right {
             self.rotate_right(len);
-            for _i in 0..amount {
+            for _ in 0..amount {
                 self.head();
             }
-            for _i in 0..len {
+            for _ in 0..len {
                 let item = self.chop();
                 self.append(item);
             }
         } else {
             self.rotate_left(idx);
-            for _i in 0..amount {
+            for _ in 0..amount {
                 self.tail();
             }
-            for _i in 0..idx {
+            for _ in 0..idx {
                 let item = self.cut();
                 self.prepend(item);
             }
