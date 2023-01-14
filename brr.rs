@@ -12,6 +12,18 @@ impl<T: Clone + Default> Brr<T> {
             right: Vec::new(),
         };
     }
+    pub fn is_empty(self) -> bool {
+        return self.length() == 0
+    }
+    pub fn transform(&mut self, callback: fn(acc:Brr<T>, item: &T, index: usize) -> Brr<T>) -> Brr<T> {
+        let mut result: Brr<T> = Brr::new();
+        result.fill(vec![self.first().unwrap().clone()]);
+        for index in 1..self.length() {
+            let current = self.get(index).unwrap();
+            result = callback(result, current, index);
+        }
+        return result;
+    }
     pub fn clear(&mut self) -> &mut Self {
         self.left.clear();
         self.right.clear();
@@ -21,15 +33,19 @@ impl<T: Clone + Default> Brr<T> {
     pub fn length(&self) -> usize {
         return self.left.len() + self.right.len() - 1;
     }
-    pub fn get(&self, idx: usize) -> &T {
+    pub fn get(&self, idx: usize) -> Option<&T> {
+        if self.length() == 0 {
+            return None;
+        } else {
         let offset_index = idx as Size + (self.left.len() - 1) as Size * -1;
         if offset_index >= 0 {
             let index = offset_index as usize;
-            return &self.right[index];
+            return Some(&self.right[index]);
         } else {
             let index = (offset_index * -1) as usize;
-            return &self.left[index];
+            return Some(&self.left[index]);
         }
+     }
     }
     pub fn set(&mut self, idx: usize, val: T) {
         let len = self.length();
@@ -58,9 +74,9 @@ impl<T: Clone + Default> Brr<T> {
             return self;
         }
         if len == 1 {
-            self.clear();
-            return self;
-        } else if self.left.len() > 1 {
+            return self.clear();
+        }
+        if self.left.len() > 1 {
             self.left.pop();
             return self;
         } else {
@@ -75,9 +91,9 @@ impl<T: Clone + Default> Brr<T> {
             return self;
         }
         if len == 1 {
-            self.clear();
-            return self;
-        } else if self.right.len() > 0 {
+            return self.clear();
+        }
+       if self.right.len() > 0 {
             self.right.pop();
             return self;
         } else {
@@ -90,7 +106,7 @@ impl<T: Clone + Default> Brr<T> {
         let mut out: Vec<T> = Vec::new();
         let len = self.length();
         for idx in 0..len {
-            out.push(self.get(idx).clone())
+            out.push(self.get(idx).unwrap().clone())
         }
         return out;
     }
@@ -101,6 +117,10 @@ impl<T: Clone + Default> Brr<T> {
     pub fn fill(&mut self, items: Vec<T>) -> &mut Self {
         self.clear();
         let len = items.len();
+        if len == 1 {
+            self.right.push(items[0].clone());
+            return self;
+        }
         let half = ((len / 2) as f64).floor() as usize;
         let mut left = half - 1;
         let mut right = half;
@@ -122,10 +142,10 @@ impl<T: Clone + Default> Brr<T> {
         }
         return self;
     }
-    pub fn first(&self) -> &T {
+    pub fn first(&self) -> Option<&T> {
         return self.get(0);
     }
-    pub fn last(&self) -> &T {
+    pub fn last(&self) -> Option<&T> {
         return self.get(self.length() - 1);
     }
     pub fn map(&mut self, callback: fn(item: &T, index: usize) -> T) -> Brr<T> {
@@ -135,7 +155,7 @@ impl<T: Clone + Default> Brr<T> {
         let mut left = half - 1;
         let mut right = half;
         loop {
-            out.left.push(callback(self.get(left), left));
+            out.left.push(callback(self.get(left).unwrap(), left));
             if left == 0 {
                 break;
             } else {
@@ -143,7 +163,7 @@ impl<T: Clone + Default> Brr<T> {
             }
         }
         loop {
-            out.right.push(callback(self.get(right), right));
+            out.right.push(callback(self.get(right).unwrap(), right));
             right = right + 1;
             if right == len {
                 break;
@@ -154,7 +174,7 @@ impl<T: Clone + Default> Brr<T> {
     pub fn filter(&mut self, callback: fn(item: &T, index: usize) -> bool) -> Brr<T> {
         let mut out = Brr::new();
         for index in 0..self.length() {
-            let current = self.get(index);
+            let current = self.get(index).unwrap();
             if callback(current, index) {
                 out.append(current.clone());
             }
@@ -171,7 +191,7 @@ impl<T: Clone + Default> Brr<T> {
             if self.left.len() - 1 == 0 {
                 self.balance();
             }
-            self.append(self.first().clone());
+            self.append(self.first().unwrap().clone());
             self.tail();
             rot = rot - 1
         }
@@ -186,7 +206,7 @@ impl<T: Clone + Default> Brr<T> {
             if self.right.len() == 0 {
                 self.balance();
             }
-            self.prepend(self.last().clone());
+            self.prepend(self.last().unwrap().clone());
             self.head();
             rot = rot - 1
         }
