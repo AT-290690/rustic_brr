@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+use std::cmp::min;
 type Size = i32;
 #[derive(Default, Clone)]
 pub struct Brr<T> {
@@ -29,9 +30,9 @@ impl<T: Clone + Default> Brr<T> {
     ///
     /// The reduce method calls the callback_fn function one time for each element in the array.
     /// The result is a new array
-    pub fn transform(
+    pub fn transform<F: Fn(Brr<T>, &T, usize) ->  Brr<T>>(
         &mut self,
-        callback: fn(acc: Brr<T>, item: &T, index: usize) -> Brr<T>,
+        callback: F,
     ) -> Brr<T> {
         let mut result: Brr<T> = Brr::new();
         let length = self.length();
@@ -63,7 +64,7 @@ impl<T: Clone + Default> Brr<T> {
             start = len - 1
         }
         let slice_len = end - start;
-        let half = ((slice_len / 2) as f64).floor() as usize;
+        let half = (slice_len as f64 * 0.5).floor() as usize;
         for i in (0..half).rev() {
             slice.prepend(self.get(start as usize + i).unwrap().clone());
         }
@@ -191,7 +192,7 @@ impl<T: Clone + Default> Brr<T> {
             self.right.push(items[0].clone());
             return self;
         }
-        let half = ((len / 2) as f64).floor() as usize;
+        let half = (len as f64 * 0.5).floor() as usize;
         let mut left = half - 1;
         let mut right = half;
 
@@ -218,16 +219,38 @@ impl<T: Clone + Default> Brr<T> {
     pub fn last(&self) -> Option<&T> {
         return self.get(self.length() - 1);
     }
+    pub fn for_each<F: FnMut(&T, usize) -> ()>(&mut self, mut callback: F) -> &mut Self {
+        let len = self.length();
+        let half = (len as f64 * 0.5).floor() as usize;
+        let mut left = half - 1;
+        let mut right = half;
+        loop {
+            callback(self.get(left).unwrap(), left);
+            if left == 0 {
+                break;
+            } else {
+                left = left - 1
+            }
+        }
+        loop {
+            callback(self.get(right).unwrap(), right);
+            right = right + 1;
+            if right == len {
+                break;
+            }
+        }
+        return self;
+    }
     /// Calls a defined callback function on each element of an array,
     /// and returns an array that contains the results.
     ///
     /// callback_fn — A function that accepts 2 arguments (value, index)
     ///
     /// The result is a new array
-    pub fn map(&mut self, callback: fn(item: &T, index: usize) -> T) -> Brr<T> {
+    pub fn map<F: Fn(&T, usize) -> T>(&mut self, callback: F) -> Brr<T> {
         let mut out: Brr<T> = Brr::new();
         let len = self.length();
-        let half = ((len / 2) as f64).floor() as usize;
+        let half = (len as f64 * 0.5).floor() as usize;
         let mut left = half - 1;
         let mut right = half;
         loop {
@@ -254,7 +277,7 @@ impl<T: Clone + Default> Brr<T> {
     /// The filter method calls the predicate function one time for each element in the array.
     ///
     /// The result is a new array
-    pub fn filter(&mut self, callback: fn(item: &T, index: usize) -> bool) -> Brr<T> {
+    pub fn filter<F: Fn(&T, usize) -> bool>(&mut self, callback: F) -> Brr<T> {
         let mut out = Brr::new();
         for index in 0..self.length() {
             let current = self.get(index).unwrap();
@@ -410,7 +433,7 @@ impl<T: Clone + Default> Brr<T> {
             return self;
         }
         let len = length - idx - 1;
-        amount = std::cmp::min(len, amount);
+        amount = min(len, amount);
         let offset_index = idx as Size + self.offset_left();
         let is_close_to_right = offset_index > 0;
         if is_close_to_right {
@@ -433,5 +456,30 @@ impl<T: Clone + Default> Brr<T> {
             }
         }
         return self;
+    }
+    pub fn partition(&self, groups: usize) -> Brr<Brr<T>>{
+        let mut result: Brr<Brr<T>> = Brr::new();
+        let length = self.length();
+        if length == 0 || groups == 0 {
+            return result;
+        }
+        for index in 0..length {
+            if index % groups == 0 {
+                let mut part = Brr::new();
+                let half = (groups as f64 * 0.5).round() as usize;
+                if half == 0 { 
+                    return result;
+                }
+                for i in (0..half).rev() {
+                    self.get(index + i).and_then(|c| Some(part.prepend(c.clone())));
+                }
+                for i in half..groups {
+                    self.get(index + i).and_then(|c| Some(part.append(c.clone())));
+                }
+                result.append(part);
+            }
+        }
+        result.balance();
+        return result;
     }
 }

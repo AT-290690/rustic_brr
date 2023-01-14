@@ -177,5 +177,17 @@ mod tests {
             assert!(*brr_arr.at(-4).unwrap() == 2);
             assert!(*brr_arr.at(-5).unwrap() == 1);
         }
+        {
+            let mut b = Brr::new();
+            let out = b.from_vec(vec![1,2,3,4]).partition(2);
+            assert_eq!(*out.get(0).unwrap().to_vec(), vec![1,2]);
+            assert_eq!(*out.get(1).unwrap().to_vec(), vec![3,4]);
+        }
+        {
+            let mut b = Brr::new();
+            let mut z = 10;
+            b.from_vec(vec![1,2,3,4]).for_each(|x, _ | z += x );
+            assert!(z == 20)
+        }
     }
 }
