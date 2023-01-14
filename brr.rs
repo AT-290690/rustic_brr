@@ -234,12 +234,4 @@ impl<T: Clone + Default> Brr<T> {
         }
         return self;
     }
-    pub fn rotate(&mut self, n: usize, right: bool) -> &mut Self {
-        if right {
-            self.rotate_right(n);
-        } else {
-            self.rotate_left(n);
-        }
-        return self;
-    }
 }
