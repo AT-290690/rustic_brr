@@ -21,21 +21,41 @@ impl<T: Clone + Default> Brr<T> {
     pub fn is_empty(self) -> bool {
         return self.length() == 0;
     }
+    /// Calls the specified callback function for all the elements in an array.
+    /// The return value of the callback function is the accumulated result,
+    /// and is provided as an argument in the next call to the callback function.
+    ///
+    /// callback_fn — A function that accepts 3 arguments (accumulator, value, index)
+    ///
+    /// The reduce method calls the callback_fn function one time for each element in the array.
+    /// The result is a new array
     pub fn transform(
         &mut self,
         callback: fn(acc: Brr<T>, item: &T, index: usize) -> Brr<T>,
     ) -> Brr<T> {
         let mut result: Brr<T> = Brr::new();
+        let length = self.length();
+        if length == 0 {
+            return result;
+        }
         result.from_vec(vec![self.first().unwrap().clone()]);
-        for index in 1..self.length() {
+        for index in 1..length {
             let current = self.get(index).unwrap();
             result = callback(result, current, index);
         }
         return result;
     }
-    pub fn slice(&self, mut start: i32, mut end: i32) -> Brr<T> {
+    /// Returns a copy of a section of an array
+    /// from start to end
+    ///
+    /// Accepts 2 arguments (start, end)
+    ///
+    /// This is exclusive of the element at the index 'end'.
+    ///
+    /// Returns a new array
+    pub fn slice(&self, mut start: Size, mut end: Size) -> Brr<T> {
         let mut slice = Brr::new();
-        let len = self.length() as i32;
+        let len = self.length() as Size;
         if end == 0 {
             end = len
         }
@@ -85,6 +105,26 @@ impl<T: Clone + Default> Brr<T> {
             } else {
                 let index = (offset_index * -1) as usize;
                 self.left[index] = val;
+            }
+        }
+    }
+    pub fn at(&self, rel_idx: Size) -> Option<&T> {
+        let len = self.length();
+        if len == 0 {
+            return None;
+        } else {
+            let idx = if rel_idx < 0 {
+                len as Size + rel_idx
+            } else {
+                rel_idx
+            };
+            let offset_index = idx + self.offset_left();
+            if offset_index >= 0 {
+                let index = offset_index as usize;
+                return Some(&self.right[index]);
+            } else {
+                let index = (offset_index * -1) as usize;
+                return Some(&self.left[index]);
             }
         }
     }
@@ -145,7 +185,9 @@ impl<T: Clone + Default> Brr<T> {
     pub fn from_vec(&mut self, items: Vec<T>) -> &mut Self {
         self.clear();
         let len = items.len();
-        if len == 1 {
+        if len == 0 {
+            return self;
+        } else if len == 1 {
             self.right.push(items[0].clone());
             return self;
         }
@@ -176,6 +218,12 @@ impl<T: Clone + Default> Brr<T> {
     pub fn last(&self) -> Option<&T> {
         return self.get(self.length() - 1);
     }
+    /// Calls a defined callback function on each element of an array,
+    /// and returns an array that contains the results.
+    ///
+    /// callback_fn — A function that accepts 2 arguments (value, index)
+    ///
+    /// The result is a new array
     pub fn map(&mut self, callback: fn(item: &T, index: usize) -> T) -> Brr<T> {
         let mut out: Brr<T> = Brr::new();
         let len = self.length();
@@ -199,6 +247,13 @@ impl<T: Clone + Default> Brr<T> {
         }
         return out;
     }
+    /// Returns the elements of an array that meet the condition specified in a callback function.
+    ///
+    /// predicate — A function that accepts 2 arguments (value, index)
+    ///
+    /// The filter method calls the predicate function one time for each element in the array.
+    ///
+    /// The result is a new array
     pub fn filter(&mut self, callback: fn(item: &T, index: usize) -> bool) -> Brr<T> {
         let mut out = Brr::new();
         for index in 0..self.length() {
@@ -251,7 +306,7 @@ impl<T: Clone + Default> Brr<T> {
         return first;
     }
     pub fn insert(&mut self, idx: usize, value: T) -> &Self {
-        let length  = self.length();
+        let length = self.length();
         if length < idx {
             return self;
         } else if length == idx {
@@ -281,7 +336,7 @@ impl<T: Clone + Default> Brr<T> {
         return self;
     }
     pub fn insert_many(&mut self, idx: usize, values: Vec<T>) -> &Self {
-        let length  = self.length();
+        let length = self.length();
         if length < idx {
             return self;
         } else if length == idx {
@@ -319,9 +374,9 @@ impl<T: Clone + Default> Brr<T> {
         return self;
     }
     pub fn remove(&mut self, idx: usize) -> &Self {
-        let length  = self.length();
+        let length = self.length();
         if length < idx {
-            return self
+            return self;
         } else if length == idx {
             self.head();
             return self;
@@ -347,7 +402,7 @@ impl<T: Clone + Default> Brr<T> {
         return self;
     }
     pub fn remove_many(&mut self, idx: usize, mut amount: usize) -> &Self {
-        let length  = self.length();
+        let length = self.length();
         if length < idx + amount {
             return self;
         } else if length == idx + amount {

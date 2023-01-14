@@ -4,11 +4,12 @@ use std::fmt;
 
 use crate::brr::Brr;
 impl fmt::Debug for brr::Brr<i32> {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("Brr")
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        return f
+            .debug_struct("Brr")
             .field("left", &self.left)
             .field("right", &self.right)
-            .finish()
+            .finish();
     }
 }
 

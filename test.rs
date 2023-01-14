@@ -86,7 +86,7 @@ mod tests {
         }
         {
             fn validate_parens(str: &str) -> bool {
-                let mut  input= Brr::new();
+                let mut input = Brr::new();
                 let str = str.to_string();
                 return input
                     .from_vec(str.split("").collect())
@@ -106,6 +106,7 @@ mod tests {
                     })
                     .is_empty();
             }
+            assert!(validate_parens("") == true);
             assert!(validate_parens("(())") == true);
             assert!(validate_parens("(()") == false);
             assert!(validate_parens("((()))()()(())()") == true);
@@ -129,11 +130,20 @@ mod tests {
             let mut brr = Brr::new();
             let numbers = vec![1, 2, 3, 4, 5];
             let a = brr.from_vec(numbers.clone());
-            assert_eq!(a.insert_many(0, vec![0, 0, 0]).to_vec(), vec![0, 0, 0, 1, 2, 3, 4, 5]);
+            assert_eq!(
+                a.insert_many(0, vec![0, 0, 0]).to_vec(),
+                vec![0, 0, 0, 1, 2, 3, 4, 5]
+            );
             let b = brr.from_vec(numbers.clone());
-            assert_eq!(b.insert_many(3, vec![10, 20, 30]).to_vec(), vec![1, 2, 3, 10, 20, 30, 4, 5]);
+            assert_eq!(
+                b.insert_many(3, vec![10, 20, 30]).to_vec(),
+                vec![1, 2, 3, 10, 20, 30, 4, 5]
+            );
             let c = brr.from_vec(numbers.clone());
-            assert_eq!(c.insert_many(5, vec![10, 20, 30]).to_vec(), vec![1, 2, 3, 4, 5, 10, 20, 30]);
+            assert_eq!(
+                c.insert_many(5, vec![10, 20, 30]).to_vec(),
+                vec![1, 2, 3, 4, 5, 10, 20, 30]
+            );
             let d = brr.from_vec(numbers.clone());
             assert_eq!(d.insert(2, 100).to_vec(), vec![1, 2, 100, 3, 4, 5]);
             let e = brr.from_vec(numbers.clone());
@@ -152,6 +162,20 @@ mod tests {
             assert_eq!(d.remove(2).to_vec(), vec![1, 2, 4, 5]);
             let e = brr.from_vec(numbers.clone());
             assert_eq!(e.remove(100).to_vec(), vec![1, 2, 3, 4, 5]);
+        }
+        {
+            let mut brr_arr = Brr::new();
+            brr_arr.from_vec(vec![1, 2, 3, 4, 5]);
+            assert!(*brr_arr.at(0).unwrap() == 1);
+            assert!(*brr_arr.at(1).unwrap() == 2);
+            assert!(*brr_arr.at(2).unwrap() == 3);
+            assert!(*brr_arr.at(3).unwrap() == 4);
+            assert!(*brr_arr.at(4).unwrap() == 5);
+            assert!(*brr_arr.at(-1).unwrap() == 5);
+            assert!(*brr_arr.at(-2).unwrap() == 4);
+            assert!(*brr_arr.at(-3).unwrap() == 3);
+            assert!(*brr_arr.at(-4).unwrap() == 2);
+            assert!(*brr_arr.at(-5).unwrap() == 1);
         }
     }
 }
