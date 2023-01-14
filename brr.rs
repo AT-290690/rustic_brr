@@ -13,11 +13,14 @@ impl<T: Clone + Default> Brr<T> {
         };
     }
     pub fn is_empty(self) -> bool {
-        return self.length() == 0
+        return self.length() == 0;
     }
-    pub fn transform(&mut self, callback: fn(acc:Brr<T>, item: &T, index: usize) -> Brr<T>) -> Brr<T> {
+    pub fn transform(
+        &mut self,
+        callback: fn(acc: Brr<T>, item: &T, index: usize) -> Brr<T>,
+    ) -> Brr<T> {
         let mut result: Brr<T> = Brr::new();
-        result.fill(vec![self.first().unwrap().clone()]);
+        result.from_vec(vec![self.first().unwrap().clone()]);
         for index in 1..self.length() {
             let current = self.get(index).unwrap();
             result = callback(result, current, index);
@@ -37,15 +40,15 @@ impl<T: Clone + Default> Brr<T> {
         if self.length() == 0 {
             return None;
         } else {
-        let offset_index = idx as Size + (self.left.len() - 1) as Size * -1;
-        if offset_index >= 0 {
-            let index = offset_index as usize;
-            return Some(&self.right[index]);
-        } else {
-            let index = (offset_index * -1) as usize;
-            return Some(&self.left[index]);
+            let offset_index = idx as Size + (self.left.len() - 1) as Size * -1;
+            if offset_index >= 0 {
+                let index = offset_index as usize;
+                return Some(&self.right[index]);
+            } else {
+                let index = (offset_index * -1) as usize;
+                return Some(&self.left[index]);
+            }
         }
-     }
     }
     pub fn set(&mut self, idx: usize, val: T) {
         let len = self.length();
@@ -93,7 +96,7 @@ impl<T: Clone + Default> Brr<T> {
         if len == 1 {
             return self.clear();
         }
-       if self.right.len() > 0 {
+        if self.right.len() > 0 {
             self.right.pop();
             return self;
         } else {
@@ -112,9 +115,9 @@ impl<T: Clone + Default> Brr<T> {
     }
     pub fn balance(&mut self) -> &mut Self {
         let items = self.to_vec();
-        return self.fill(items);
+        return self.from_vec(items);
     }
-    pub fn fill(&mut self, items: Vec<T>) -> &mut Self {
+    pub fn from_vec(&mut self, items: Vec<T>) -> &mut Self {
         self.clear();
         let len = items.len();
         if len == 1 {
