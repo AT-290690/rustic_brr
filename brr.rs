@@ -8,7 +8,7 @@ pub struct Brr<T> {
 impl<T: Clone + Default> Brr<T> {
     pub fn new() -> Self {
         return Brr {
-            left: vec![T::default(); 1],
+            left: vec![T::default()],
             right: Vec::new(),
         };
     }
