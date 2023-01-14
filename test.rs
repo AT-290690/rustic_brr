@@ -125,5 +125,33 @@ mod tests {
             let s3 = brr.slice(0, 3);
             assert_eq!(s3.to_vec(), vec![1, 2, 3]);
         }
+        {
+            let mut brr = Brr::new();
+            let numbers = vec![1, 2, 3, 4, 5];
+            let a = brr.from_vec(numbers.clone());
+            assert_eq!(a.insert_many(0, vec![0, 0, 0]).to_vec(), vec![0, 0, 0, 1, 2, 3, 4, 5]);
+            let b = brr.from_vec(numbers.clone());
+            assert_eq!(b.insert_many(3, vec![10, 20, 30]).to_vec(), vec![1, 2, 3, 10, 20, 30, 4, 5]);
+            let c = brr.from_vec(numbers.clone());
+            assert_eq!(c.insert_many(5, vec![10, 20, 30]).to_vec(), vec![1, 2, 3, 4, 5, 10, 20, 30]);
+            let d = brr.from_vec(numbers.clone());
+            assert_eq!(d.insert(2, 100).to_vec(), vec![1, 2, 100, 3, 4, 5]);
+            let e = brr.from_vec(numbers.clone());
+            assert_eq!(e.insert(100, 100).to_vec(), vec![1, 2, 3, 4, 5]);
+        }
+        {
+            let mut brr = Brr::new();
+            let numbers = vec![1, 2, 3, 4, 5];
+            let a = brr.from_vec(numbers.clone());
+            assert_eq!(a.remove_many(0, 3).to_vec(), vec![4, 5]);
+            let b = brr.from_vec(numbers.clone());
+            assert_eq!(b.remove_many(3, 1).to_vec(), vec![1, 2, 3, 5]);
+            let c = brr.from_vec(numbers.clone());
+            assert_eq!(c.remove_many(4, 1).to_vec(), vec![1, 2, 3, 4]);
+            let d = brr.from_vec(numbers.clone());
+            assert_eq!(d.remove(2).to_vec(), vec![1, 2, 4, 5]);
+            let e = brr.from_vec(numbers.clone());
+            assert_eq!(e.remove(100).to_vec(), vec![1, 2, 3, 4, 5]);
+        }
     }
 }

@@ -12,6 +12,12 @@ impl<T: Clone + Default> Brr<T> {
             right: Vec::new(),
         };
     }
+    fn offset_left(&self) -> Size {
+        return (self.left.len() - 1) as Size * -1;
+    }
+    fn offset_right(&self) -> Size {
+        return self.right.len() as Size;
+    }
     pub fn is_empty(self) -> bool {
         return self.length() == 0;
     }
@@ -59,7 +65,7 @@ impl<T: Clone + Default> Brr<T> {
         if self.length() == 0 {
             return None;
         } else {
-            let offset_index = idx as Size + (self.left.len() - 1) as Size * -1;
+            let offset_index = idx as Size + self.offset_left();
             if offset_index >= 0 {
                 let index = offset_index as usize;
                 return Some(&self.right[index]);
@@ -72,7 +78,7 @@ impl<T: Clone + Default> Brr<T> {
     pub fn set(&mut self, idx: usize, val: T) {
         let len = self.length();
         if idx < len {
-            let offset_index = idx as Size + (self.left.len() - 1) as Size * -1;
+            let offset_index = idx as Size + self.offset_left();
             if offset_index >= 0 {
                 let index = offset_index as usize;
                 self.right[index] = val;
@@ -231,6 +237,145 @@ impl<T: Clone + Default> Brr<T> {
             self.prepend(self.last().unwrap().clone());
             self.head();
             rot = rot - 1
+        }
+        return self;
+    }
+    pub fn cut(&mut self) -> T {
+        let last = self.last().unwrap().clone();
+        self.head();
+        return last;
+    }
+    pub fn chop(&mut self) -> T {
+        let first = self.first().unwrap().clone();
+        self.tail();
+        return first;
+    }
+    pub fn insert(&mut self, idx: usize, value: T) -> &Self {
+        let length  = self.length();
+        if length < idx {
+            return self;
+        } else if length == idx {
+            self.append(value);
+            return self;
+        } else if idx == 0 {
+            self.prepend(value);
+            return self;
+        }
+        let offset_index = idx as Size + self.offset_left();
+        if offset_index > 0 {
+            let len = length - idx;
+            self.rotate_right(len);
+            self.append(value);
+            for _i in 0..(len - 1) {
+                let item = self.chop();
+                self.append(item);
+            }
+        } else {
+            self.rotate_left(idx);
+            self.prepend(value);
+            for _i in 0..idx {
+                let item = self.cut();
+                self.prepend(item);
+            }
+        }
+        return self;
+    }
+    pub fn insert_many(&mut self, idx: usize, values: Vec<T>) -> &Self {
+        let length  = self.length();
+        if length < idx {
+            return self;
+        } else if length == idx {
+            for i in 0..values.len() {
+                self.append(values[i].clone());
+            }
+            return self;
+        } else if idx == 0 {
+            for i in 0..values.len() {
+                self.prepend(values[i].clone());
+            }
+            return self;
+        }
+        let offset_index = idx as Size + self.offset_left();
+        if offset_index > 0 {
+            let len = length - idx;
+            self.rotate_right(len);
+            for i in 0..values.len() {
+                self.append(values[i].clone());
+            }
+            for _i in 0..len {
+                let item = self.chop();
+                self.append(item);
+            }
+        } else {
+            self.rotate_left(idx);
+            for i in 0..values.len() {
+                self.prepend(values[i].clone());
+            }
+            for _i in 0..idx {
+                let item = self.cut();
+                self.prepend(item);
+            }
+        }
+        return self;
+    }
+    pub fn remove(&mut self, idx: usize) -> &Self {
+        let length  = self.length();
+        if length < idx {
+            return self
+        } else if length == idx {
+            self.head();
+            return self;
+        }
+        let len = length - idx - 1;
+        let offset_index = idx as Size + self.offset_left();
+        let is_close_to_right = offset_index > 0;
+        if is_close_to_right {
+            self.rotate_right(len);
+            self.head();
+            for _i in 0..len {
+                let item = self.chop();
+                self.append(item);
+            }
+        } else {
+            self.rotate_left(idx);
+            self.tail();
+            for _i in 0..idx {
+                let item = self.cut();
+                self.prepend(item);
+            }
+        }
+        return self;
+    }
+    pub fn remove_many(&mut self, idx: usize, mut amount: usize) -> &Self {
+        let length  = self.length();
+        if length < idx + amount {
+            return self;
+        } else if length == idx + amount {
+            self.head();
+            return self;
+        }
+        let len = length - idx - 1;
+        amount = std::cmp::min(len, amount);
+        let offset_index = idx as Size + self.offset_left();
+        let is_close_to_right = offset_index > 0;
+        if is_close_to_right {
+            self.rotate_right(len);
+            for _i in 0..amount {
+                self.head();
+            }
+            for _i in 0..len {
+                let item = self.chop();
+                self.append(item);
+            }
+        } else {
+            self.rotate_left(idx);
+            for _i in 0..amount {
+                self.tail();
+            }
+            for _i in 0..idx {
+                let item = self.cut();
+                self.prepend(item);
+            }
         }
         return self;
     }
