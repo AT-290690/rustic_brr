@@ -60,6 +60,21 @@ impl<T: Clone + Default> Brr<T> {
         }
         return result;
     }
+    pub fn find<F: Fn(&T, usize) -> bool>(&self, callback: F) -> Option<T> {
+        let length = self.length();
+        for i in 0..length {
+            match self.get(i) {
+                Some(f) => {
+                    if callback(f, i) {
+                        return Some(f.clone());
+                    }
+                }
+                None => return None,
+            }
+        }
+        return None;
+    }
+
     /// Returns a copy of a section of an array
     /// from start to end
     ///

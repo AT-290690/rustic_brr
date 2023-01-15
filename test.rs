@@ -87,7 +87,51 @@ mod tests {
         }
     }
     #[test]
-    fn transform() {
+    fn transform_char() {
+        fn validate_parens(str: &str) -> bool {
+            let left = "(".chars().next().unwrap();
+            let right = ")".chars().next().unwrap();
+            return brr::Brr::new()
+                .from_vec(str.to_string().chars().collect::<Vec<char>>())
+                .filter(|s, _| *s == left || *s == right)
+                .transform(|mut stack, paren, _| {
+                    match *paren == left {
+                        true => {
+                            stack.prepend(*paren);
+                        }
+                        false => {
+                            let first = stack.first();
+                            match first {
+                                Some(str) => {
+                                    if *str == left {
+                                        stack.tail();
+                                    } else if *str == right {
+                                        stack.append(*paren);
+                                    }
+                                }
+                                None => {
+                                    stack.append(*paren);
+                                }
+                            }
+                        }
+                    }
+
+                    return stack;
+                })
+                .is_empty();
+        }
+
+        assert!(validate_parens("") == true);
+        assert!(validate_parens("(())") == true);
+        assert!(validate_parens("(()") == false);
+        assert!(validate_parens("((()))()()(())()") == true);
+        assert!(validate_parens("(((((") == false);
+        assert!(validate_parens("((1 + 2) * 4) / 2 + 10") == true);
+        assert!(validate_parens("((10 + 4) ^ 2) + (7 + 10) ^ 3") == true);
+        assert!(validate_parens("(10 + 4) ^ 2) + (7 + 10) ^ 3") == false);
+    }
+    #[test]
+    fn transform_str() {
         fn validate_parens(str: &str) -> bool {
             return brr::Brr::new()
                 .from_vec(str.to_string().split("").collect::<Vec<&str>>())
@@ -100,10 +144,10 @@ mod tests {
                         false => {
                             let first = stack.first();
                             match first {
-                                Some(str) => {
-                                    if *str == "(" {
+                                Some(s) => {
+                                    if *s == "(" {
                                         stack.tail();
-                                    } else if *str == ")" {
+                                    } else if *s == ")" {
                                         stack.append(paren);
                                     }
                                 }
@@ -231,5 +275,29 @@ mod tests {
         let expected = input.clone();
         let deep = b.from_vec(input).partition(3);
         assert_eq!(brr::flat(deep).to_vec(), expected);
+    }
+
+    #[test]
+    fn find() {
+        assert!(
+            brr::Brr::new()
+                .from_vec(Vec::from([1, 2, 3, 4, 5]))
+                .find(|x, _| *x == 3)
+                .unwrap()
+                == 3
+        );
+        assert!(
+            brr::Brr::new()
+                .from_vec(Vec::from([1, 2, 3, 4, 5]))
+                .find(|x, _| *x == 5)
+                .unwrap()
+                == 5
+        );
+        assert!(
+            brr::Brr::new()
+                .from_vec(Vec::from([1, 2, 3, 4, 5]))
+                .find(|x, _| *x == 15)
+                == None
+        );
     }
 }
