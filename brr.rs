@@ -343,10 +343,8 @@ impl<T: Clone + Default> Brr<T> {
                 let last = current.clone();
                 self.head();
                 return last;
-            },
-            None => {
-                return T::default()
             }
+            None => return T::default(),
         }
     }
     pub fn chop(&mut self) -> T {
@@ -355,10 +353,8 @@ impl<T: Clone + Default> Brr<T> {
                 let first = current.clone();
                 self.tail();
                 return first;
-            },
-            None => {
-                return T::default()
             }
+            None => return T::default(),
         }
     }
     pub fn insert(&mut self, idx: usize, value: T) -> &Self {

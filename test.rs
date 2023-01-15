@@ -89,26 +89,36 @@ mod tests {
     #[test]
     fn transform() {
         fn validate_parens(str: &str) -> bool {
-            let mut input = brr::Brr::new();
-            let str = str.to_string();
-            return input
-                .from_vec(str.split("").collect())
+            return brr::Brr::new()
+                .from_vec(str.to_string().split("").collect::<Vec<&str>>())
                 .filter(|s, _| *s == "(" || *s == ")")
                 .transform(|mut stack, paren, _| {
-                    if *paren == "(" {
-                        stack.prepend(paren);
-                    } else {
-                        let first = stack.first();
-                        if first != None && *first.unwrap() == "(" {
-                            stack.tail();
-                        } else {
-                            stack.append(paren);
+                    match *paren == "(" {
+                        true => {
+                            stack.prepend(paren);
+                        }
+                        false => {
+                            let first = stack.first();
+                            match first {
+                                Some(str) => {
+                                    if *str == "(" {
+                                        stack.tail();
+                                    } else if *str == ")" {
+                                        stack.append(paren);
+                                    }
+                                }
+                                None => {
+                                    stack.append(paren);
+                                }
+                            }
                         }
                     }
+
                     return stack;
                 })
                 .is_empty();
         }
+
         assert!(validate_parens("") == true);
         assert!(validate_parens("(())") == true);
         assert!(validate_parens("(()") == false);
