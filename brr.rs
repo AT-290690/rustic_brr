@@ -49,6 +49,17 @@ impl<T: Clone + Default> Brr<T> {
         }
         return result;
     }
+    pub fn to<F: Fn(B, &T, usize) -> B, B>(&self, callback: F, mut result: B) -> B {
+        let length = self.length();
+        if length == 0 {
+            return result;
+        }
+        for index in 0..length {
+            let current = self.get(index).unwrap();
+            result = callback(result, current, index);
+        }
+        return result;
+    }
     /// Returns a copy of a section of an array
     /// from start to end
     ///
@@ -474,12 +485,14 @@ impl<T: Clone + Default> Brr<T> {
                     return result;
                 }
                 for i in (0..half).rev() {
-                    self.get(index + i)
-                        .and_then(|c| Some(part.prepend(c.clone())));
+                    if length > index + i {
+                        part.prepend(self.get(index + i).unwrap().clone());
+                    }
                 }
                 for i in half..groups {
-                    self.get(index + i)
-                        .and_then(|c| Some(part.append(c.clone())));
+                    if length > index + i {
+                        part.append(self.get(index + i).unwrap().clone());
+                    }
                 }
                 result.append(part);
             }
@@ -487,4 +500,14 @@ impl<T: Clone + Default> Brr<T> {
         result.balance();
         return result;
     }
+}
+
+pub fn flat<T: Clone + Default>(brr: Brr<Brr<T>>) -> Brr<T> {
+    let mut out: Vec<T> = Vec::new();
+    for i in 0..brr.length() {
+        out.extend(brr.get(i).unwrap().to_vec())
+    }
+    let mut result = Brr::new();
+    result.from_vec(out);
+    return result;
 }

@@ -1,10 +1,9 @@
 #[cfg(test)]
 mod tests {
-    use crate::brr::Brr;
-
+    use crate::brr;
     #[test]
     fn getters() {
-        let mut brr_arr = Brr::new();
+        let mut brr_arr = brr::Brr::new();
         brr_arr.from_vec(vec![1, 2, 3, 4, 5]);
         assert!(*brr_arr.get(0).unwrap() == 1);
         assert!(*brr_arr.get(1).unwrap() == 2);
@@ -24,20 +23,20 @@ mod tests {
         brr_arr.tail().tail().tail().tail().tail().tail().tail();
         brr_arr.prepend(42);
         assert!(*brr_arr.get(0).unwrap() == 42);
-        let mut my_arr: Brr<i32> = Brr::new();
+        let mut my_arr: brr::Brr<i32> = brr::Brr::new();
         my_arr.from_vec(vec![1; 1000]);
         my_arr.set(512, 9);
     }
     #[test]
     fn map() {
-        let mut brr_arr = Brr::new();
+        let mut brr_arr = brr::Brr::new();
         brr_arr.from_vec(vec![1, 2, 3, 4, 5]);
         let brr_map = brr_arr.map(|x, i| x * 2 + i);
         assert_eq!(brr_map.to_vec(), vec![2, 5, 8, 11, 14]);
     }
     #[test]
     fn filter() {
-        let mut brr_arr = Brr::new();
+        let mut brr_arr = brr::Brr::new();
         brr_arr.from_vec(vec![1, 2, 3, 4, 5]);
         let brr_filter = brr_arr.filter(|x, _i| x % 2 == 0);
         assert_eq!(brr_filter.to_vec(), vec![2, 4]);
@@ -45,30 +44,30 @@ mod tests {
     #[test]
     fn rotate() {
         {
-            let mut brr_arr = Brr::new();
+            let mut brr_arr = brr::Brr::new();
             brr_arr.from_vec(vec![1, 2, 3]).rotate_right(2);
             assert_eq!(brr_arr.to_vec(), vec![2, 3, 1]);
         }
 
         {
-            let mut brr_arr = Brr::new();
+            let mut brr_arr = brr::Brr::new();
             brr_arr.from_vec(vec![1, 2, 3]).rotate_left(2);
             assert_eq!(brr_arr.to_vec(), vec![3, 1, 2]);
         }
         {
-            let mut brr_arr = Brr::new();
+            let mut brr_arr = brr::Brr::new();
             brr_arr.from_vec(vec![1, 2, 3]).rotate_left(2 * 100);
             assert_eq!(brr_arr.to_vec(), vec![3, 1, 2]);
         }
 
         {
-            let mut brr_arr = Brr::new();
+            let mut brr_arr = brr::Brr::new();
             brr_arr.from_vec(vec![1, 2, 3]).rotate_left(0);
             assert_eq!(brr_arr.to_vec(), vec![1, 2, 3]);
         }
 
         {
-            let mut brr_arr = Brr::new();
+            let mut brr_arr = brr::Brr::new();
             brr_arr
                 .from_vec(vec![1, 2, 3])
                 .rotate_left(3)
@@ -76,12 +75,12 @@ mod tests {
             assert_eq!(brr_arr.to_vec(), vec![1, 2, 3]);
         }
         {
-            let mut brr_arr = Brr::new();
+            let mut brr_arr = brr::Brr::new();
             brr_arr.from_vec(vec![1, 2, 3]).rotate_right(3);
             assert_eq!(brr_arr.to_vec(), vec![1, 2, 3]);
         }
         {
-            let mut brr_arr = Brr::new();
+            let mut brr_arr = brr::Brr::new();
             brr_arr.from_vec(vec![1, 2, 3]).rotate_right(3);
             brr_arr.tail().tail().tail();
             assert!(brr_arr.is_empty() == true);
@@ -90,7 +89,7 @@ mod tests {
     #[test]
     fn transform() {
         fn validate_parens(str: &str) -> bool {
-            let mut input = Brr::new();
+            let mut input = brr::Brr::new();
             let str = str.to_string();
             return input
                 .from_vec(str.split("").collect())
@@ -121,7 +120,7 @@ mod tests {
     }
     #[test]
     fn slice() {
-        let mut brr = Brr::new();
+        let mut brr = brr::Brr::new();
         let numbers = vec![1, 2, 3, 4, 5];
         brr.from_vec(numbers);
         let s1 = brr.slice(2, 0);
@@ -134,7 +133,7 @@ mod tests {
     #[test]
     fn insert_remove() {
         {
-            let mut brr = Brr::new();
+            let mut brr = brr::Brr::new();
             let numbers = vec![1, 2, 3, 4, 5];
             let a = brr.from_vec(numbers.clone());
             assert_eq!(
@@ -158,7 +157,7 @@ mod tests {
         }
 
         {
-            let mut brr = Brr::new();
+            let mut brr = brr::Brr::new();
             let numbers = vec![1, 2, 3, 4, 5];
             let a = brr.from_vec(numbers.clone());
             assert_eq!(a.remove_many(0, 3).to_vec(), vec![4, 5]);
@@ -174,7 +173,7 @@ mod tests {
     }
     #[test]
     fn at() {
-        let mut brr_arr = Brr::new();
+        let mut brr_arr = brr::Brr::new();
         brr_arr.from_vec(vec![1, 2, 3, 4, 5]);
         assert!(*brr_arr.at(0).unwrap() == 1);
         assert!(*brr_arr.at(1).unwrap() == 2);
@@ -189,16 +188,26 @@ mod tests {
     }
     #[test]
     fn partition() {
-        let mut b = Brr::new();
+        let mut b = brr::Brr::new();
         let out = b.from_vec(vec![1, 2, 3, 4]).partition(2);
         assert_eq!(*out.get(0).unwrap().to_vec(), vec![1, 2]);
         assert_eq!(*out.get(1).unwrap().to_vec(), vec![3, 4]);
+        assert_eq!(brr::flat(out).to_vec(), vec![1, 2, 3, 4]);
     }
     #[test]
     fn for_each() {
-        let mut b = Brr::new();
+        let mut b = brr::Brr::new();
         let mut z = 10;
         b.from_vec(vec![1, 2, 3, 4]).for_each(|x, _| z += x);
         assert!(z == 20)
+    }
+
+    #[test]
+    fn flat() {
+        let mut b = brr::Brr::new();
+        let input = vec![1, 2, 3, 4, 5, 6, 7, 8];
+        let expected = input.clone();
+        let deep = b.from_vec(input).partition(3);
+        assert_eq!(brr::flat(deep).to_vec(), expected);
     }
 }
