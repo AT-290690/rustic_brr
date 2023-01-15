@@ -322,6 +322,19 @@ impl<T: Clone + Default> Brr<T> {
         out.balance();
         return out;
     }
+    pub fn rotate(&mut self, dir: Size) -> &mut Self {
+       match dir < 0  {
+        true => {
+            let n = dir * -1;
+            self.rotate_left(n as usize);
+        },
+        false => {
+            let n = dir;
+            self.rotate_right(n as usize);
+        }
+       }
+       return self;
+    }
     pub fn rotate_left(&mut self, n: usize) -> &mut Self {
         let mut rot = n % self.length();
         loop {

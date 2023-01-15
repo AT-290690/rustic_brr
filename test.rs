@@ -45,24 +45,24 @@ mod tests {
     fn rotate() {
         {
             let mut brr_arr = brr::Brr::new();
-            brr_arr.from_vec(Vec::from([1, 2, 3])).rotate_right(2);
+            brr_arr.from_vec(Vec::from([1, 2, 3])).rotate(2);
             assert_eq!(brr_arr.to_vec(), Vec::from([2, 3, 1]));
         }
 
         {
             let mut brr_arr = brr::Brr::new();
-            brr_arr.from_vec(Vec::from([1, 2, 3])).rotate_left(2);
+            brr_arr.from_vec(Vec::from([1, 2, 3])).rotate(-2);
             assert_eq!(brr_arr.to_vec(), Vec::from([3, 1, 2]));
         }
         {
             let mut brr_arr = brr::Brr::new();
-            brr_arr.from_vec(Vec::from([1, 2, 3])).rotate_left(2 * 100);
+            brr_arr.from_vec(Vec::from([1, 2, 3])).rotate(2 * 100 * -1);
             assert_eq!(brr_arr.to_vec(), Vec::from([3, 1, 2]));
         }
 
         {
             let mut brr_arr = brr::Brr::new();
-            brr_arr.from_vec(Vec::from([1, 2, 3])).rotate_left(0);
+            brr_arr.from_vec(Vec::from([1, 2, 3])).rotate(0);
             assert_eq!(brr_arr.to_vec(), Vec::from([1, 2, 3]));
         }
 
@@ -76,12 +76,12 @@ mod tests {
         }
         {
             let mut brr_arr = brr::Brr::new();
-            brr_arr.from_vec(Vec::from([1, 2, 3])).rotate_right(3);
+            brr_arr.from_vec(Vec::from([1, 2, 3])).rotate(3);
             assert_eq!(brr_arr.to_vec(), Vec::from([1, 2, 3]));
         }
         {
             let mut brr_arr = brr::Brr::new();
-            brr_arr.from_vec(Vec::from([1, 2, 3])).rotate_right(3);
+            brr_arr.from_vec(Vec::from([1, 2, 3])).rotate(3);
             brr_arr.tail().tail().tail();
             assert!(brr_arr.is_empty() == true);
         }
