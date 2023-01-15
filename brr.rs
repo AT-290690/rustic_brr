@@ -1,10 +1,6 @@
 #![allow(dead_code)]
-use std::any::type_name;
 use std::cmp::min;
 type Size = i32;
-fn type_of<T>(_: T) -> &'static str {
-    type_name::<T>()
-}
 
 #[derive(Default, Clone)]
 pub struct Brr<T> {
@@ -74,7 +70,27 @@ impl<T: Clone + Default> Brr<T> {
         }
         return None;
     }
-
+    pub fn find_index<F: Fn(&T, usize) -> bool>(&self, callback: F) -> Option<usize> {
+        let length = self.length();
+        for i in 0..length {
+            match self.get(i) {
+                Some(f) => {
+                    if callback(f, i) {
+                        return Some(i);
+                    }
+                }
+                None => return None,
+            }
+        }
+        return None;
+    }
+    pub fn concat(&mut self, other: &Brr<T>) -> &mut Self {
+        for i in 0..other.length() {
+            self.append(other.get(i).unwrap().clone());
+        }
+        self.balance();
+        return self;
+    }
     /// Returns a copy of a section of an array
     /// from start to end
     ///
@@ -323,17 +339,17 @@ impl<T: Clone + Default> Brr<T> {
         return out;
     }
     pub fn rotate(&mut self, dir: Size) -> &mut Self {
-       match dir < 0  {
-        true => {
-            let n = dir * -1;
-            self.rotate_left(n as usize);
-        },
-        false => {
-            let n = dir;
-            self.rotate_right(n as usize);
+        match dir < 0 {
+            true => {
+                let n = dir * -1;
+                self.rotate_left(n as usize);
+            }
+            false => {
+                let n = dir;
+                self.rotate_right(n as usize);
+            }
         }
-       }
-       return self;
+        return self;
     }
     pub fn rotate_left(&mut self, n: usize) -> &mut Self {
         let mut rot = n % self.length();

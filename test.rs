@@ -299,5 +299,46 @@ mod tests {
                 .find(|x, _| *x == 15)
                 == None
         );
+        assert!(
+            brr::Brr::new()
+                .from_vec(Vec::from([1, 2, 3, 4, 5]))
+                .find_index(|x, _| *x == 3)
+                .unwrap()
+                == 2
+        );
+        assert!(
+            brr::Brr::new()
+                .from_vec(Vec::from([1, 2, 3, 4, 5]))
+                .find_index(|x, _| *x == 5)
+                .unwrap()
+                == 4
+        );
+        assert!(
+            brr::Brr::new()
+                .from_vec(Vec::from([1, 2, 3, 4, 5]))
+                .find_index(|x, _| *x == 15)
+                == None
+        );
+    }
+    #[test]
+    fn concat() {
+        {
+            let mut a = brr::Brr::new();
+            let mut b = brr::Brr::new();
+            assert_eq!(
+                a.from_vec(Vec::from([1, 2, 3, 4, 5]))
+                    .concat(b.from_vec(Vec::from([10, 20, 30, 40, 50])))
+                    .to_vec(),
+                [1, 2, 3, 4, 5, 10, 20, 30, 40, 50]
+            );
+        }
+        {
+            let mut a = brr::Brr::new();
+            let b = brr::Brr::new();
+            assert_eq!(
+                a.from_vec(Vec::from([1, 2, 3, 4, 5])).concat(&b).to_vec(),
+                [1, 2, 3, 4, 5]
+            );
+        }
     }
 }
