@@ -15,7 +15,7 @@ pub struct Brr<T> {
 impl<T: Clone + Default> Brr<T> {
     pub fn new() -> Self {
         return Brr {
-            left: vec![T::default()],
+            left: Vec::from([T::default()]),
             right: Vec::new(),
         };
     }
@@ -42,7 +42,7 @@ impl<T: Clone + Default> Brr<T> {
         if length == 0 {
             return result;
         }
-        result.from_vec(vec![self.first().unwrap().clone()]);
+        result.from_vec(Vec::from([self.first().unwrap().clone()]));
         for index in 1..length {
             let current = self.get(index).unwrap();
             result = callback(result, current, index);

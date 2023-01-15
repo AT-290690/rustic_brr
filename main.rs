@@ -12,6 +12,7 @@ impl fmt::Debug for brr::Brr<i32> {
             .finish();
     }
 }
+
 fn main() {
     let mut bench_arr: Brr<i32> = Brr::new();
     let mut idx: usize = 0;
