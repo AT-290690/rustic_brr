@@ -1,11 +1,17 @@
 #![allow(dead_code)]
 use std::cmp::min;
+use std::any::type_name;
 type Size = i32;
+fn type_of<T>(_: T) -> &'static str {
+    type_name::<T>()
+}
+
 #[derive(Default, Clone)]
 pub struct Brr<T> {
     pub left: Vec<T>,
     pub right: Vec<T>,
 }
+
 impl<T: Clone + Default> Brr<T> {
     pub fn new() -> Self {
         return Brr {

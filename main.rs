@@ -12,15 +12,7 @@ impl fmt::Debug for brr::Brr<i32> {
             .finish();
     }
 }
-impl fmt::Debug for brr::Brr<Brr<i32>> {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        return f
-            .debug_struct("Brr")
-            .field("left", &self.left)
-            .field("right", &self.right)
-            .finish();
-    }
-}
+
 fn main() {
     let mut bench_arr: Brr<i32> = Brr::new();
     let mut idx: usize = 0;
