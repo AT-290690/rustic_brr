@@ -50,7 +50,7 @@ fn main() {
             bench_arr.right.len()
         ]
     );
-    assert!(bench_arr.length() == 0 && bench_arr.left.len() - 1 == 0 && bench_arr.right.len() == 0);
+    assert!(bench_arr.length() == 0 && bench_arr.left.len() - 1 == 0 && bench_arr.right.is_empty());
 
     idx_bench = 0;
     let mut poor_vec = Vec::new();
@@ -65,7 +65,7 @@ fn main() {
     println!("vector of size {}", poor_vec.len());
     loop {
         idx_bench += 1;
-        if poor_vec.len() > 0 {
+        if !poor_vec.is_empty() {
             poor_vec.remove(0);
         }
         if idx_bench == amount {

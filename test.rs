@@ -279,14 +279,14 @@ mod tests {
     #[test]
     fn find() {
         assert!(
-            brr::Brr::new()
+            *brr::Brr::new()
                 .from_vec(Vec::from([1, 2, 3, 4, 5]))
                 .find(|x, _| *x == 3)
                 .unwrap()
                 == 3
         );
         assert!(
-            brr::Brr::new()
+            *brr::Brr::new()
                 .from_vec(Vec::from([1, 2, 3, 4, 5]))
                 .find(|x, _| *x == 5)
                 .unwrap()

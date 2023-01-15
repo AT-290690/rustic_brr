@@ -16,7 +16,7 @@ impl<T: Clone + Default> Brr<T> {
         };
     }
     fn offset_left(&self) -> Size {
-        return (self.left.len() - 1) as Size * -1;
+        return -((self.left.len() - 1) as Size);
     }
     fn offset_right(&self) -> Size {
         return self.right.len() as Size;
@@ -56,13 +56,13 @@ impl<T: Clone + Default> Brr<T> {
         }
         return result;
     }
-    pub fn find<F: Fn(&T, usize) -> bool>(&self, callback: F) -> Option<T> {
+    pub fn find<F: Fn(&T, usize) -> bool>(&self, callback: F) -> Option<&T> {
         let length = self.length();
         for i in 0..length {
             match self.get(i) {
                 Some(f) => {
                     if callback(f, i) {
-                        return Some(f.clone());
+                        return Some(f);
                     }
                 }
                 None => return None,
@@ -167,7 +167,7 @@ impl<T: Clone + Default> Brr<T> {
                 let index = offset_index as usize;
                 return Some(&self.right[index]);
             } else {
-                let index = (offset_index * -1) as usize;
+                let index = (-offset_index) as usize;
                 return Some(&self.left[index]);
             }
         }
@@ -180,7 +180,7 @@ impl<T: Clone + Default> Brr<T> {
                 let index = offset_index as usize;
                 self.right[index] = val;
             } else {
-                let index = (offset_index * -1) as usize;
+                let index = (-offset_index) as usize;
                 self.left[index] = val;
             }
         }
@@ -200,7 +200,7 @@ impl<T: Clone + Default> Brr<T> {
                 let index = offset_index as usize;
                 return Some(&self.right[index]);
             } else {
-                let index = (offset_index * -1) as usize;
+                let index = (-offset_index) as usize;
                 return Some(&self.left[index]);
             }
         }
@@ -238,7 +238,7 @@ impl<T: Clone + Default> Brr<T> {
         if len == 1 {
             return self.clear();
         }
-        if self.right.len() > 0 {
+        if !self.right.is_empty() {
             self.right.pop();
             return self;
         } else {
@@ -277,12 +277,12 @@ impl<T: Clone + Default> Brr<T> {
             if left == 0 {
                 break;
             } else {
-                left = left - 1
+                left -= 1
             }
         }
         loop {
             self.right.push(items[right].clone());
-            right = right + 1;
+            right += 1;
             if right == len {
                 break;
             }
@@ -299,7 +299,7 @@ impl<T: Clone + Default> Brr<T> {
         }
         return self.get(length - 1);
     }
-    pub fn for_each<F: FnMut(&T, usize) -> ()>(&mut self, mut callback: F) -> &mut Self {
+    pub fn for_each<F: FnMut(&T, usize)>(&mut self, mut callback: F) -> &mut Self {
         let len = self.length();
         let half = (len as f64 * 0.5).floor() as usize;
         let mut left = half - 1;
@@ -309,12 +309,12 @@ impl<T: Clone + Default> Brr<T> {
             if left == 0 {
                 break;
             } else {
-                left = left - 1
+                left -= 1
             }
         }
         loop {
             callback(self.get(right).unwrap(), right);
-            right = right + 1;
+            right += 1;
             if right == len {
                 break;
             }
@@ -338,12 +338,12 @@ impl<T: Clone + Default> Brr<T> {
             if left == 0 {
                 break;
             } else {
-                left = left - 1
+                left -= 1
             }
         }
         loop {
             out.right.push(callback(self.get(right).unwrap(), right));
-            right = right + 1;
+            right += 1;
             if right == len {
                 break;
             }
@@ -371,7 +371,7 @@ impl<T: Clone + Default> Brr<T> {
     pub fn rotate(&mut self, dir: Size) -> &mut Self {
         match dir < 0 {
             true => {
-                let n = dir * -1;
+                let n = -dir;
                 self.rotate_left(n as usize);
             }
             false => {
@@ -392,7 +392,7 @@ impl<T: Clone + Default> Brr<T> {
             }
             self.append(self.first().unwrap().clone());
             self.tail();
-            rot = rot - 1
+            rot -= 1
         }
         return self;
     }
@@ -402,12 +402,12 @@ impl<T: Clone + Default> Brr<T> {
             if rot == 0 {
                 break;
             }
-            if self.right.len() == 0 {
+            if self.right.is_empty() {
                 self.balance();
             }
             self.prepend(self.last().unwrap().clone());
             self.head();
-            rot = rot - 1
+            rot -= 1
         }
         return self;
     }
@@ -466,13 +466,13 @@ impl<T: Clone + Default> Brr<T> {
         if length < idx {
             return self;
         } else if length == idx {
-            for i in 0..values.len() {
-                self.append(values[i].clone());
+            for item in values {
+                self.append(item.clone());
             }
             return self;
         } else if idx == 0 {
-            for i in 0..values.len() {
-                self.prepend(values[i].clone());
+            for item in values {
+                self.prepend(item.clone());
             }
             return self;
         }
@@ -480,8 +480,8 @@ impl<T: Clone + Default> Brr<T> {
         if offset_index > 0 {
             let len = length - idx;
             self.rotate_right(len);
-            for i in 0..values.len() {
-                self.append(values[i].clone());
+            for item in values {
+                self.append(item.clone());
             }
             for _ in 0..len {
                 let item = self.chop();
@@ -489,8 +489,8 @@ impl<T: Clone + Default> Brr<T> {
             }
         } else {
             self.rotate_left(idx);
-            for i in 0..values.len() {
-                self.prepend(values[i].clone());
+            for item in values {
+                self.prepend(item.clone());
             }
             for _ in 0..idx {
                 let item = self.cut();
@@ -574,19 +574,13 @@ impl<T: Clone + Default> Brr<T> {
                     return result;
                 }
                 for i in (0..half).rev() {
-                    match self.get(index + i) {
-                        Some(c) => {
-                            part.prepend(c.clone());
-                        }
-                        None => {}
-                    }
+                    if let Some(c) = self.get(index + i) {
+                          part.prepend(c.clone());
+                     }
                 }
                 for i in half..groups {
-                    match self.get(index + i) {
-                        Some(c) => {
-                            part.append(c.clone());
-                        }
-                        None => {}
+                    if let Some(c) = self.get(index + i) {
+                        part.append(c.clone());
                     }
                 }
                 result.append(part);
