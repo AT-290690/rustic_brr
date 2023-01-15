@@ -115,7 +115,6 @@ mod tests {
                             }
                         }
                     }
-
                     return stack;
                 })
                 .is_empty();
@@ -333,6 +332,17 @@ mod tests {
             );
         }
         {
+            assert_eq!(
+                brr::Brr::new()
+                    .from_vec(Vec::from([1, 2, 3, 4, 5]))
+                    .concat(brr::Brr::new().from_vec(Vec::from([10, 20, 30, 40, 50])))
+                    .concat(brr::Brr::new().from_vec(Vec::from([6])))
+                    .concat(brr::Brr::new().from_vec(Vec::from([32, -2, 12])))
+                    .to_vec(),
+                [1, 2, 3, 4, 5, 10, 20, 30, 40, 50, 6, 32, -2, 12]
+            );
+        }
+        {
             let mut a = brr::Brr::new();
             let b = brr::Brr::new();
             assert_eq!(
@@ -340,5 +350,15 @@ mod tests {
                 [1, 2, 3, 4, 5]
             );
         }
+    }
+    #[test]
+    fn reverse() {
+        assert_eq!(
+            brr::Brr::new()
+                .from_vec(Vec::from([1, 2, 3, 4, 5]))
+                .reverse()
+                .to_vec(),
+            [5, 4, 3, 2, 1]
+        )
     }
 }

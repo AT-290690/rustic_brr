@@ -91,6 +91,17 @@ impl<T: Clone + Default> Brr<T> {
         self.balance();
         return self;
     }
+    /// Reverses the elements in an array in place.
+    ///
+    /// This method mutates the array and returns a reference to the same array.
+    pub fn reverse(&mut self) -> &mut Self {
+        let mut left = self.left.clone();
+        let mut right = self.right.clone();
+        right.insert(0, left.remove(0));
+        self.left = right;
+        self.right = left;
+        return self;
+    }
     /// Returns a copy of a section of an array
     /// from start to end
     ///
