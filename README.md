@@ -1,7 +1,7 @@
 # Rustic Brr
 
 <p align="center">
-<img width="250" src="./logo.svg"/>
+<img width="200" src="./logo.svg"/>
 </p>
 
 ## Instant array operations
