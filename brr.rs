@@ -1,6 +1,6 @@
 #![allow(dead_code)]
-use std::cmp::min;
 use std::any::type_name;
+use std::cmp::min;
 type Size = i32;
 fn type_of<T>(_: T) -> &'static str {
     type_name::<T>()
@@ -36,10 +36,7 @@ impl<T: Clone + Default> Brr<T> {
     ///
     /// The reduce method calls the callback_fn function one time for each element in the array.
     /// The result is a new array
-    pub fn transform<F: Fn(Brr<T>, &T, usize) ->  Brr<T>>(
-        &mut self,
-        callback: F,
-    ) -> Brr<T> {
+    pub fn transform<F: Fn(Brr<T>, &T, usize) -> Brr<T>>(&mut self, callback: F) -> Brr<T> {
         let mut result: Brr<T> = Brr::new();
         let length = self.length();
         if length == 0 {
@@ -463,7 +460,7 @@ impl<T: Clone + Default> Brr<T> {
         }
         return self;
     }
-    pub fn partition(&self, groups: usize) -> Brr<Brr<T>>{
+    pub fn partition(&self, groups: usize) -> Brr<Brr<T>> {
         let mut result: Brr<Brr<T>> = Brr::new();
         let length = self.length();
         if length == 0 || groups == 0 {
@@ -473,14 +470,16 @@ impl<T: Clone + Default> Brr<T> {
             if index % groups == 0 {
                 let mut part = Brr::new();
                 let half = (groups as f64 * 0.5).round() as usize;
-                if half == 0 { 
+                if half == 0 {
                     return result;
                 }
                 for i in (0..half).rev() {
-                    self.get(index + i).and_then(|c| Some(part.prepend(c.clone())));
+                    self.get(index + i)
+                        .and_then(|c| Some(part.prepend(c.clone())));
                 }
                 for i in half..groups {
-                    self.get(index + i).and_then(|c| Some(part.append(c.clone())));
+                    self.get(index + i)
+                        .and_then(|c| Some(part.append(c.clone())));
                 }
                 result.append(part);
             }
