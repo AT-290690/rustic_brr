@@ -102,6 +102,25 @@ impl<T: Clone + Default> Brr<T> {
         self.right = left;
         return self;
     }
+    pub fn some<F: Fn(&T, usize) -> bool>(&mut self, callback: F) -> bool {
+        for index in 0..self.length() {
+            let current = self.get(index).unwrap();
+            if callback(current, index) {
+                return true;
+            }
+        }
+        return false;
+    }
+    pub fn every<F: Fn(&T, usize) -> bool>(&mut self, callback: F) -> bool {
+        let length = self.length();
+        for index in 0..length {
+            let current = self.get(index).unwrap();
+            if index == length || !callback(current, index) {
+                return false;
+            }
+        }
+        return true;
+    }
     /// Returns a copy of a section of an array
     /// from start to end
     ///

@@ -361,4 +361,37 @@ mod tests {
             [5, 4, 3, 2, 1]
         )
     }
+    #[test]
+    fn some_every() {
+        assert!(
+            brr::Brr::new()
+                .from_vec(Vec::from([1, 2, 3, 4, 5]))
+                .some(|x, _| *x == 2)
+                == true
+        );
+        assert!(
+            brr::Brr::new()
+                .from_vec(Vec::from([1, 2, 3, 4, 5]))
+                .some(|x, _| *x == 10)
+                == false
+        );
+        assert!(
+            brr::Brr::new()
+                .from_vec(Vec::from([1, 2, 3, 4, 5]))
+                .every(|x, _| *x == 2)
+                == false
+        );
+        assert!(
+            brr::Brr::new()
+                .from_vec(Vec::from([1, 2, 3, 4, 5]))
+                .every(|x, _| *x < 10)
+                == true
+        );
+        assert!(
+            brr::Brr::new()
+                .from_vec(Vec::from([2, 4, 6, 8]))
+                .every(|x, _| *x % 2 == 0)
+                == true
+        )
+    }
 }
