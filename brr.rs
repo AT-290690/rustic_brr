@@ -97,7 +97,8 @@ impl<T: Clone + Default> Brr<T> {
         return self.left.len() + self.right.len() - 1;
     }
     pub fn get(&self, idx: usize) -> Option<&T> {
-        if self.length() == 0 {
+        let length = self.length();
+        if length == 0 || length <= idx {
             return None;
         } else {
             let offset_index = idx as Size + self.offset_left();
@@ -231,7 +232,11 @@ impl<T: Clone + Default> Brr<T> {
         return self.get(0);
     }
     pub fn last(&self) -> Option<&T> {
-        return self.get(self.length() - 1);
+        let length = self.length();
+        if length == 0 {
+            return None;
+        }
+        return self.get(length - 1);
     }
     pub fn for_each<F: FnMut(&T, usize) -> ()>(&mut self, mut callback: F) -> &mut Self {
         let len = self.length();
@@ -333,14 +338,28 @@ impl<T: Clone + Default> Brr<T> {
         return self;
     }
     pub fn cut(&mut self) -> T {
-        let last = self.last().unwrap().clone();
-        self.head();
-        return last;
+        match self.last() {
+            Some(current) => {
+                let last = current.clone();
+                self.head();
+                return last;
+            },
+            None => {
+                return T::default()
+            }
+        }
     }
     pub fn chop(&mut self) -> T {
-        let first = self.first().unwrap().clone();
-        self.tail();
-        return first;
+        match self.first() {
+            Some(current) => {
+                let first = current.clone();
+                self.tail();
+                return first;
+            },
+            None => {
+                return T::default()
+            }
+        }
     }
     pub fn insert(&mut self, idx: usize, value: T) -> &Self {
         let length = self.length();
@@ -485,13 +504,19 @@ impl<T: Clone + Default> Brr<T> {
                     return result;
                 }
                 for i in (0..half).rev() {
-                    if length > index + i {
-                        part.prepend(self.get(index + i).unwrap().clone());
+                    match self.get(index + i) {
+                        Some(c) => {
+                            part.prepend(c.clone());
+                        }
+                        None => {}
                     }
                 }
                 for i in half..groups {
-                    if length > index + i {
-                        part.append(self.get(index + i).unwrap().clone());
+                    match self.get(index + i) {
+                        Some(c) => {
+                            part.append(c.clone());
+                        }
+                        None => {}
                     }
                 }
                 result.append(part);

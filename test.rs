@@ -187,6 +187,18 @@ mod tests {
         assert!(*brr_arr.at(-5).unwrap() == 1);
     }
     #[test]
+    fn chop_cut() {
+        let mut brr_arr = brr::Brr::new();
+        brr_arr.from_vec(vec![1, 2, 3, 4, 5]);
+        for _ in 0..10 {
+            brr_arr.chop();
+        }
+        brr_arr.from_vec(vec![1, 2, 3, 4, 5]);
+        for _ in 0..10 {
+            brr_arr.cut();
+        }
+    }
+    #[test]
     fn partition() {
         let mut b = brr::Brr::new();
         let out = b.from_vec(vec![1, 2, 3, 4]).partition(2);
