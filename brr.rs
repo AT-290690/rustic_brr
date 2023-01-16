@@ -628,6 +628,9 @@ impl<T: Clone + Default> Brr<T> {
 
 #[macro_export]
 macro_rules! brr {
+    ($arg:expr; $n:expr) => {
+        brr::Brr::make(brr::Brr::new(), vec![$arg; $n])
+    };
     ($($args:expr),*) => {
         brr::Brr::make(brr::Brr::new(), Vec::from([$($args),*]))
     };
