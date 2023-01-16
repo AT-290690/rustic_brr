@@ -14,7 +14,7 @@ impl fmt::Debug for brr::Brr<i32> {
 }
 
 fn main() {
-    let mut bench_arr: Brr<i32> = Brr::new();
+    let mut bench_arr: Brr<i32> = brr![];
     let mut idx: usize = 0;
     let amount = 100000;
     loop {

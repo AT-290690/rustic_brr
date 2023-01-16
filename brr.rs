@@ -15,6 +15,41 @@ impl<T: Clone + Default> Brr<T> {
             right: Vec::new(),
         };
     }
+    pub fn make(self, items: Vec<T>) -> Brr<T> {
+        let mut left_branch = Vec::from([T::default()]);
+        let mut right_branch = Vec::new();
+        let len = items.len();
+        if len == 0 {
+        } else if len == 1 {
+            right_branch.push(items[0].clone());
+        } else {
+            let len = items.len();
+            let half = (len as f64 * 0.5).floor() as usize;
+            let mut left = half - 1;
+            let mut right = half;
+
+            loop {
+                left_branch.push(items[left].clone());
+                if left == 0 {
+                    break;
+                } else {
+                    left -= 1
+                }
+            }
+            loop {
+                right_branch.push(items[right].clone());
+                right += 1;
+                if right == len {
+                    break;
+                }
+            }
+        }
+
+        return Brr {
+            left: left_branch,
+            right: right_branch,
+        };
+    }
     fn offset_left(&self) -> Size {
         return -((self.left.len() - 1) as Size);
     }
@@ -575,8 +610,8 @@ impl<T: Clone + Default> Brr<T> {
                 }
                 for i in (0..half).rev() {
                     if let Some(c) = self.get(index + i) {
-                          part.prepend(c.clone());
-                     }
+                        part.prepend(c.clone());
+                    }
                 }
                 for i in half..groups {
                     if let Some(c) = self.get(index + i) {
@@ -591,6 +626,15 @@ impl<T: Clone + Default> Brr<T> {
     }
 }
 
+#[macro_export]
+macro_rules! brr {
+    ($($args:expr),*) => {
+        brr::Brr::make(brr::Brr::new(), Vec::from([$($args),*]))
+    };
+    () => {
+        brr::Brr::new()
+    }
+}
 pub fn flat<T: Clone + Default>(brr: Brr<Brr<T>>) -> Brr<T> {
     let mut out: Vec<T> = Vec::new();
     for i in 0..brr.length() {
