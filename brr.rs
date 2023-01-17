@@ -73,8 +73,7 @@ impl<T: Clone + Default> Brr<T> {
         if length == 0 {
             return result;
         }
-        result.from_vec(Vec::from([self.first().unwrap().clone()]));
-        for index in 1..length {
+        for index in 0..length {
             let current = self.get(index).unwrap();
             result = callback(result, current, index);
         }
@@ -425,8 +424,8 @@ impl<T: Clone + Default> Brr<T> {
             if self.left.len() - 1 == 0 {
                 self.balance();
             }
-            self.append(self.first().unwrap().clone());
-            self.tail();
+            let first = self.chop();
+            self.append(first);
             rot -= 1
         }
         return self;
@@ -440,30 +439,36 @@ impl<T: Clone + Default> Brr<T> {
             if self.right.is_empty() {
                 self.balance();
             }
-            self.prepend(self.last().unwrap().clone());
-            self.head();
+            let last = self.cut();
+            self.prepend(last);
             rot -= 1
         }
         return self;
     }
     pub fn cut(&mut self) -> T {
-        match self.last() {
-            Some(current) => {
-                let last = current.clone();
-                self.head();
-                return last;
+        match !self.right.is_empty() {
+            true => {
+                if self.right.len() > 0 {
+                    return self.right.pop().unwrap();
+                } else {
+                    self.balance();
+                    return self.right.pop().unwrap();
+                }
             }
-            None => return T::default(),
+            false => return T::default(),
         }
     }
     pub fn chop(&mut self) -> T {
-        match self.first() {
-            Some(current) => {
-                let first = current.clone();
-                self.tail();
-                return first;
+        match !self.left.is_empty() {
+            true => {
+                if self.left.len() > 1 {
+                    return self.left.pop().unwrap();
+                } else {
+                    self.balance();
+                    return self.left.pop().unwrap();
+                }
             }
-            None => return T::default(),
+            false => return T::default(),
         }
     }
     pub fn insert(&mut self, idx: usize, value: T) -> &Self {
@@ -502,12 +507,12 @@ impl<T: Clone + Default> Brr<T> {
             return self;
         } else if length == idx {
             for item in values {
-                self.append(item.clone());
+                self.append(item);
             }
             return self;
         } else if idx == 0 {
             for item in values {
-                self.prepend(item.clone());
+                self.prepend(item);
             }
             return self;
         }
@@ -516,7 +521,7 @@ impl<T: Clone + Default> Brr<T> {
             let len = length - idx;
             self.rotate_right(len);
             for item in values {
-                self.append(item.clone());
+                self.append(item);
             }
             for _ in 0..len {
                 let item = self.chop();
@@ -525,7 +530,7 @@ impl<T: Clone + Default> Brr<T> {
         } else {
             self.rotate_left(idx);
             for item in values {
-                self.prepend(item.clone());
+                self.prepend(item);
             }
             for _ in 0..idx {
                 let item = self.cut();
@@ -609,13 +614,13 @@ impl<T: Clone + Default> Brr<T> {
                     return result;
                 }
                 for i in (0..half).rev() {
-                    if let Some(c) = self.get(index + i) {
-                        part.prepend(c.clone());
+                    if let Some(current) = self.get(index + i) {
+                        part.prepend(current.clone());
                     }
                 }
                 for i in half..groups {
-                    if let Some(c) = self.get(index + i) {
-                        part.append(c.clone());
+                    if let Some(current) = self.get(index + i) {
+                        part.append(current.clone());
                     }
                 }
                 result.append(part);
