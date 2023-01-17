@@ -60,4 +60,17 @@ Very, very, very rarly it balances the two vectors (Once on every COMPLETE remov
 Original vector shifts and unshifts for operations at the start making insertions/deletions O(N) 
 Brr has them in O(1) + keeping the access O(1).
 
-![1_CJHj_FVbZ61iWSIevvMrsw](https://media.tenor.com/m3X-prXhi9QAAAAC/hacking-crabby-crab.gif )
+And not only that, comes with batteries included. A familiar API for common array operations like map, filter and rotate.
+
+```rust
+brr![1, 2, 3, 4, 5, 6, 7, 8]
+.filter(|x, _| x % 2 == 0)
+.map(|x, _| x * 3)
+.rotate(-2)
+.slice(1, 4)
+.to_vec() // -> [24, 6, 12]
+```
+
+<p align="center">
+<img width="300" src="./logo.svg](https://media.tenor.com/m3X-prXhi9QAAAAC/hacking-crabby-crab.gif"/>
+</p>
