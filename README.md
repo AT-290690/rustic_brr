@@ -72,5 +72,5 @@ brr![1, 2, 3, 4, 5, 6, 7, 8]
 ```
 
 <p align="center">
-<img width="300" src="./logo.svg](https://media.tenor.com/m3X-prXhi9QAAAAC/hacking-crabby-crab.gif"/>
+<img width="300" src="https://media.tenor.com/m3X-prXhi9QAAAAC/hacking-crabby-crab.gif"/>
 </p>
