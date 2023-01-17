@@ -59,3 +59,5 @@ Very, very, very rarly it balances the two vectors (Once on every COMPLETE remov
 
 Original vector shifts and unshifts for operations at the start making insertions/deletions O(N) 
 Brr has them in O(1) + keeping the access O(1).
+
+![1_CJHj_FVbZ61iWSIevvMrsw](https://media.tenor.com/m3X-prXhi9QAAAAC/hacking-crabby-crab.gif )
