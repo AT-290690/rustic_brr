@@ -236,11 +236,10 @@ mod tests {
 
     #[test]
     fn flat() {
-        let mut b = brr::Brr::new();
-        let input = Vec::from([1, 2, 3, 4, 5, 6, 7, 8]);
+        let input = brr![1, 2, 3, 4, 5, 6, 7, 8];
         let expected = input.clone();
-        let deep = b.from_vec(input).partition(3);
-        assert_eq!(brr::flat(deep).to_vec(), expected);
+        let deep = input.partition(3);
+        assert_eq!(brr::flat(deep).to_vec(), expected.to_vec());
     }
 
     #[test]
@@ -284,5 +283,14 @@ mod tests {
         assert!(brr![1, 2, 3, 4, 5].every(|x, _| *x == 2) == false);
         assert!(brr![1, 2, 3, 4, 5].every(|x, _| *x < 10) == true);
         assert!(brr![2, 4, 6, 8].every(|x, _| *x % 2 == 0) == true)
+    }
+    #[test]
+    fn common() {
+       assert_eq!(brr![1, 2, 3, 4, 5, 6, 7, 8]
+        .filter(|x, _| x % 2 == 0)
+        .map(|x, _| x * 3)
+        .rotate(-2)
+        .slice(1, 4)
+        .to_vec(), [24, 6, 12])
     }
 }
