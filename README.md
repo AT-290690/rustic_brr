@@ -64,13 +64,13 @@ And not only that, comes with batteries included. A familiar API for common arra
 
 ```rust
 brr![1, 2, 3, 4, 5, 6, 7, 8]
-.filter(|x, _| x % 2 == 0)
-.map(|x, _| x * 3)
-.rotate(-2)
-.slice(1, 4)
-.to_vec() // -> [24, 6, 12]
+  .filter(|x, _| x % 2 == 0)
+  .map(|x, _| x * 3)
+  .rotate(-2)
+  .slice(1, 4)
+  .to_vec() // -> [24, 6, 12]
 ```
-
+So you can go brrrrrrr!
 <p align="center">
 <img width="300" src="https://media.tenor.com/m3X-prXhi9QAAAAC/hacking-crabby-crab.gif"/>
 </p>
