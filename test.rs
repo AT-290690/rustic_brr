@@ -293,4 +293,23 @@ mod tests {
             [24, 6, 12]
         )
     }
+    #[test]
+    fn iterator() {
+        {
+            let mut iter = brr![1, 2, 3, 4, 5].into_iter();
+            assert!(iter.next().unwrap() == 1);
+            assert!(iter.next().unwrap() == 2);
+            assert!(iter.next().unwrap() == 3);
+            assert!(iter.next().unwrap() == 4);
+            assert!(iter.next().unwrap() == 5);
+        }
+        {
+            let mut iter = brr::Brr::from_iter(brr![1, 2, 3, 4, 5].into_iter()).into_iter();
+            assert!(iter.next().unwrap() == 1);
+            assert!(iter.next().unwrap() == 2);
+            assert!(iter.next().unwrap() == 3);
+            assert!(iter.next().unwrap() == 4);
+            assert!(iter.next().unwrap() == 5);
+        }
+    }
 }

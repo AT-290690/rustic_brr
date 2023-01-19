@@ -631,6 +631,26 @@ impl<T: Clone + Default> Brr<T> {
     }
 }
 
+impl<T: Clone + Default> FromIterator<T> for Brr<T> {
+    fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> Self {
+        let mut collection: Brr<T> = Brr::new();
+        for item in iter {
+            collection.append(item);
+        }
+        collection.balance();
+        return collection;
+    }
+}
+
+impl<T: Clone + Default> IntoIterator for Brr<T> {
+    type Item = T;
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        return self.to_vec().into_iter();
+    }
+}
+
 #[macro_export]
 macro_rules! brr {
     ($arg:expr; $n:expr) => {
