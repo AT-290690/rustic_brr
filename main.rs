@@ -1,6 +1,6 @@
-mod brr;
-mod test;
 use std::fmt;
+#[path = "src/brr.rs"] mod brr;
+#[path = "src/test.rs"] mod test;
 
 use crate::brr::Brr;
 impl fmt::Debug for brr::Brr<i32> {
