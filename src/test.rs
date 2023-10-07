@@ -37,7 +37,24 @@ mod tests {
         assert_eq!(
             brr![1, 2, 3, 4, 5].filter(|x, _i| x % 2 == 0).to_vec(),
             vec![2, 4]
+        );
+        assert_eq!(
+            brr![1, 2, 3, 4, 5].select(|x| x % 2 == 0).to_vec(),
+            vec![2, 4]
+        );
+        assert_eq!(
+            brr![1, 2, 3, 4, 5].except(|x| x % 2 == 0).to_vec(),
+            vec![1, 3, 5]
         )
+    }
+    #[test]
+    fn swap() {
+        assert_eq!(brr![1, 2, 3].swap(0, 1).to_vec(), vec![2, 1, 3]);
+        {
+        let mut brr = brr![1, 2, 3, 4, 5];
+        assert_eq!(brr.swap_remove_left(2).to_vec(), vec![2, 3, 1, 5]);
+        assert_eq!(brr.swap_remove_right(2).to_vec(), vec![2, 3, 5])
+        }
     }
     #[test]
     fn rotate() {
@@ -303,6 +320,12 @@ mod tests {
                 .to_vec(),
             [24, 6, 12]
         )
+    }
+    #[test]
+    fn adjacent() {
+        assert_eq!(brr![1, 2, 3, 4].adjacent_difference(|a, b| a + b).to_vec(), [1, 3, 5, 7]);
+        assert_eq!(brr![1, 2, 3, 4].adjacent_find(|a, b| a + b == 5).unwrap(), 3);
+        assert_eq!(brr![1, 2, 3, 4].adjacent_find_index(|a, b| a + b == 5).unwrap(), 2);
     }
     #[test]
     fn iterator() {

@@ -65,7 +65,7 @@ impl<T: Clone + Default> Brr<T> {
     ///
     /// callback_fn — A function that accepts 3 arguments (accumulator, value, index)
     ///
-    /// The reduce method calls the callback_fn function one time for each element in the array.
+    /// The transform method calls the callback_fn function one time for each element in the array.
     /// The result is a new array
     pub fn transform<F: Fn(Brr<T>, &T, usize) -> Brr<T>>(&mut self, callback: F) -> Brr<T> {
         let mut result: Brr<T> = Brr::new();
@@ -400,6 +400,85 @@ impl<T: Clone + Default> Brr<T> {
             }
         }
         out.balance();
+        return out;
+    }
+    pub fn select<F: Fn(&T) -> bool>(&mut self, callback: F) -> Brr<T> {
+        let mut out = Brr::new();
+        for index in 0..self.length() {
+            let current = self.get(index).unwrap();
+            if callback(current) {
+                out.append(current.clone());
+            }
+        }
+        out.balance();
+        return out;
+    }
+    pub fn except<F: Fn(&T) -> bool>(&mut self, callback: F) -> Brr<T> {
+        let mut out = Brr::new();
+        for index in 0..self.length() {
+            let current = self.get(index).unwrap();
+            if !callback(current) {
+                out.append(current.clone());
+            }
+        }
+        out.balance();
+        return out;
+    }
+   pub fn adjacent_difference<F: Fn(&T, &T) -> T>(self, callback: F) -> Brr<T> {
+    let len = self.length();
+    if len == 1{ return self };
+    let mut result: Brr<T> = Brr::new();
+    result.append(self.get(0).unwrap().clone());
+    for i in 1..len {
+        result.append(callback(self.get(i - 1).unwrap(), self.get(i).unwrap()));
+    }
+    result.balance();
+    return result;
+   }
+   pub fn adjacent_find<F: Fn(&T, &T) -> bool>(self, callback: F) -> Option<T> {
+    let len = self.length();
+    if len == 1{ return None };
+    for i in 1..len {
+        let found = self.get(i).unwrap();
+        if callback(self.get(i - 1).unwrap(), found) {
+            return Some(found.clone())
+        }
+    }
+    return None;
+   }
+   pub fn adjacent_find_index<F: Fn(&T, &T) -> bool>(self, callback: F) -> Option<usize> {
+    let len = self.length();
+    for i in 1..len {
+        if callback(self.get(i - 1).unwrap(), self.get(i).unwrap()) {
+            return Some(i)
+        }
+    }
+    return None;
+   }
+    pub fn swap(&mut self, i: usize, j: usize) -> &mut Self {
+        let temp = self.get(i).unwrap().clone();
+        self.set(i, self.get(j).unwrap().clone());
+        self.set(j, temp.clone());
+        return self;
+    }
+    pub fn swap_remove_right(&mut self, index: usize) -> &mut Self {
+        let val = self.cut();
+        self.set(index, val);
+        return self;
+    }
+    pub fn swap_remove_left(&mut self, index: usize) -> &mut Self {
+        let val = self.chop();
+        self.set(index, val);
+        return self;
+    }
+    pub fn count<F: Fn(&T, usize) -> bool>(&mut self, callback: F) -> usize {
+        let mut out = 0;
+        for index in 0..self.length() {
+            let current = self.get(index).unwrap();
+            if callback(current, index) {
+                out+=1;
+            }
+        }
         return out;
     }
     pub fn rotate(&mut self, dir: Size) -> &mut Self {

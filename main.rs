@@ -12,7 +12,6 @@ impl fmt::Debug for brr::Brr<i32> {
             .finish();
     }
 }
-
 fn main() {
     let amount = 100000;
     let mut bench_arr: Brr<i32> = brr![1; amount];
