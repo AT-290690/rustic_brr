@@ -4,24 +4,24 @@ mod tests {
     #[test]
     fn getters() {
         let mut brr_arr = brr![1, 2, 3, 4, 5];
-        assert!(*brr_arr.get(0).unwrap() == 1);
-        assert!(*brr_arr.get(1).unwrap() == 2);
-        assert!(*brr_arr.get(2).unwrap() == 3);
-        assert!(*brr_arr.get(3).unwrap() == 4);
-        assert!(*brr_arr.get(4).unwrap() == 5);
+        assert_eq!(*brr_arr.get(0).unwrap(), 1);
+        assert_eq!(*brr_arr.get(1).unwrap(), 2);
+        assert_eq!(*brr_arr.get(2).unwrap(), 3);
+        assert_eq!(*brr_arr.get(3).unwrap(), 4);
+        assert_eq!(*brr_arr.get(4).unwrap(), 5);
         assert_eq!(brr_arr.to_vec(), vec![1, 2, 3, 4, 5]);
         brr_arr.head();
         brr_arr.tail();
-        assert!(*brr_arr.get(2).unwrap() == 4);
+        assert_eq!(*brr_arr.get(2).unwrap(), 4);
         brr_arr.set(2, 100);
-        assert!(*brr_arr.get(2).unwrap() == 100);
+        assert_eq!(*brr_arr.get(2).unwrap(), 100);
         brr_arr.tail().tail().tail().tail();
         brr_arr.from_vec(vec![1, 2, 3, 4, 5, 6, 7, 8, 9]);
         brr_arr.head().head().head().head().head().head();
         brr_arr.from_vec(vec![1, 2, 3, 4, 5, 6, 7, 8, 9]);
         brr_arr.tail().tail().tail().tail().tail().tail().tail();
         brr_arr.prepend(42);
-        assert!(*brr_arr.get(0).unwrap() == 42);
+        assert_eq!(*brr_arr.get(0).unwrap(), 42);
         let mut my_arr: brr::Brr<i32> = brr::Brr::new();
         my_arr.from_vec(vec![1; 1000]);
         my_arr.set(512, 9);
@@ -53,7 +53,7 @@ mod tests {
 
         let mut brr_arr = brr![1, 2, 3];
         brr_arr.rotate(3).tail().tail().tail();
-        assert!(brr_arr.is_empty() == true);
+        assert_eq!(brr_arr.is_empty(), true);
     }
     #[test]
     fn transform_char() {
@@ -89,14 +89,14 @@ mod tests {
                 .is_empty();
         }
 
-        assert!(validate_parens("") == true);
-        assert!(validate_parens("(())") == true);
-        assert!(validate_parens("(()") == false);
-        assert!(validate_parens("((()))()()(())()") == true);
-        assert!(validate_parens("(((((") == false);
-        assert!(validate_parens("((1 + 2) * 4) / 2 + 10") == true);
-        assert!(validate_parens("((10 + 4) ^ 2) + (7 + 10) ^ 3") == true);
-        assert!(validate_parens("(10 + 4) ^ 2) + (7 + 10) ^ 3") == false);
+        assert_eq!(validate_parens(""), true);
+        assert_eq!(validate_parens("(())"), true);
+        assert_eq!(validate_parens("(()"), false);
+        assert_eq!(validate_parens("((()))()()(())()"), true);
+        assert_eq!(validate_parens("((((("), false);
+        assert_eq!(validate_parens("((1 + 2) * 4) / 2 + 10"), true);
+        assert_eq!(validate_parens("((10 + 4) ^ 2) + (7 + 10) ^ 3"), true);
+        assert_eq!(validate_parens("(10 + 4) ^ 2) + (7 + 10) ^ 3"), false);
     }
     #[test]
     fn transform_str() {
@@ -131,14 +131,14 @@ mod tests {
                 .is_empty();
         }
 
-        assert!(validate_parens("") == true);
-        assert!(validate_parens("(())") == true);
-        assert!(validate_parens("(()") == false);
-        assert!(validate_parens("((()))()()(())()") == true);
-        assert!(validate_parens("(((((") == false);
-        assert!(validate_parens("((1 + 2) * 4) / 2 + 10") == true);
-        assert!(validate_parens("((10 + 4) ^ 2) + (7 + 10) ^ 3") == true);
-        assert!(validate_parens("(10 + 4) ^ 2) + (7 + 10) ^ 3") == false);
+        assert_eq!(validate_parens(""), true);
+        assert_eq!(validate_parens("(())"), true);
+        assert_eq!(validate_parens("(()"), false);
+        assert_eq!(validate_parens("((()))()()(())()"), true);
+        assert_eq!(validate_parens("((((("), false);
+        assert_eq!(validate_parens("((1 + 2) * 4) / 2 + 10"), true);
+        assert_eq!(validate_parens("((10 + 4) ^ 2) + (7 + 10) ^ 3"), true);
+        assert_eq!(validate_parens("(10 + 4) ^ 2) + (7 + 10) ^ 3"), false);
     }
     #[test]
     fn slice() {
@@ -194,16 +194,16 @@ mod tests {
     #[test]
     fn at() {
         let brr_arr = brr![1, 2, 3, 4, 5];
-        assert!(*brr_arr.at(0).unwrap() == 1);
-        assert!(*brr_arr.at(1).unwrap() == 2);
-        assert!(*brr_arr.at(2).unwrap() == 3);
-        assert!(*brr_arr.at(3).unwrap() == 4);
-        assert!(*brr_arr.at(4).unwrap() == 5);
-        assert!(*brr_arr.at(-1).unwrap() == 5);
-        assert!(*brr_arr.at(-2).unwrap() == 4);
-        assert!(*brr_arr.at(-3).unwrap() == 3);
-        assert!(*brr_arr.at(-4).unwrap() == 2);
-        assert!(*brr_arr.at(-5).unwrap() == 1);
+        assert_eq!(*brr_arr.at(0).unwrap(), 1);
+        assert_eq!(*brr_arr.at(1).unwrap(), 2);
+        assert_eq!(*brr_arr.at(2).unwrap(), 3);
+        assert_eq!(*brr_arr.at(3).unwrap(), 4);
+        assert_eq!(*brr_arr.at(4).unwrap(), 5);
+        assert_eq!(*brr_arr.at(-1).unwrap(), 5);
+        assert_eq!(*brr_arr.at(-2).unwrap(), 4);
+        assert_eq!(*brr_arr.at(-3).unwrap(), 3);
+        assert_eq!(*brr_arr.at(-4).unwrap(), 2);
+        assert_eq!(*brr_arr.at(-5).unwrap(), 1);
     }
     #[test]
     fn chop_cut() {
@@ -224,10 +224,18 @@ mod tests {
         assert_eq!(brr::flat(out).to_vec(), vec![1, 2, 3, 4]);
     }
     #[test]
+    fn partition_if() {
+        let out  = brr![1, 2, 3, 4, 5, 6].partition_if(|_, i| i % 2 == 1);
+        assert_eq!(out.to(|mut a, x, i| {
+            a.insert(i, x.to_vec());
+            a
+        }, Vec::new()), [[2, 4, 6], [1, 3, 5]]);
+    }
+    #[test]
     fn for_each() {
         let mut z = 10;
         brr![1, 2, 3, 4].for_each(|x, _| z += x);
-        assert!(z == 20)
+        assert_eq!(z, 20)
     }
 
     #[test]
@@ -240,12 +248,12 @@ mod tests {
 
     #[test]
     fn find() {
-        assert!(*brr![1, 2, 3, 4, 5].find(|x, _| *x == 3).unwrap() == 3);
-        assert!(*brr![1, 2, 3, 4, 5].find(|x, _| *x == 5).unwrap() == 5);
-        assert!(brr![1, 2, 3, 4, 5].find(|x, _| *x == 15) == None);
-        assert!(brr![1, 2, 3, 4, 5].find_index(|x, _| *x == 3).unwrap() == 2);
-        assert!(brr![1, 2, 3, 4, 5].find_index(|x, _| *x == 5).unwrap() == 4);
-        assert!(brr![1, 2, 3, 4, 5].find_index(|x, _| *x == 15) == None);
+        assert_eq!(*brr![1, 2, 3, 4, 5].find(|x, _| *x == 3).unwrap(), 3);
+        assert_eq!(*brr![1, 2, 3, 4, 5].find(|x, _| *x == 5).unwrap(), 5);
+        assert_eq!(brr![1, 2, 3, 4, 5].find(|x, _| *x == 15), None);
+        assert_eq!(brr![1, 2, 3, 4, 5].find_index(|x, _| *x == 3).unwrap(), 2);
+        assert_eq!(brr![1, 2, 3, 4, 5].find_index(|x, _| *x == 5).unwrap(), 4);
+        assert_eq!(brr![1, 2, 3, 4, 5].find_index(|x, _| *x == 15), None);
     }
     #[test]
     fn concat() {
@@ -274,11 +282,15 @@ mod tests {
     }
     #[test]
     fn some_every() {
-        assert!(brr![1, 2, 3, 4, 5].some(|x, _| *x == 2) == true);
-        assert!(brr![1, 2, 3, 4, 5].some(|x, _| *x == 10) == false);
-        assert!(brr![1, 2, 3, 4, 5].every(|x, _| *x == 2) == false);
-        assert!(brr![1, 2, 3, 4, 5].every(|x, _| *x < 10) == true);
-        assert!(brr![2, 4, 6, 8].every(|x, _| *x % 2 == 0) == true)
+        assert_eq!(brr![1, 2, 3, 4, 5].some(|x, _| *x == 2), true);
+        assert_eq!(brr![1, 2, 3, 4, 5].some(|x, _| *x == 10), false);
+        assert_eq!(brr![1, 2, 3, 4, 5].every(|x, _| *x == 2), false);
+        assert_eq!(brr![1, 2, 3, 4, 5].every(|x, _| *x < 10), true);
+        assert_eq!(brr![2, 4, 6, 8].every(|x, _| *x % 2 == 0), true)
+    }
+    #[test]
+    fn to() {
+        assert_eq!(brr![1, 2, 3, 4, 5].to(|a, b, _| a + b, 0), 15);
     }
     #[test]
     fn common() {
@@ -296,19 +308,19 @@ mod tests {
     fn iterator() {
         {
             let mut iter = brr![1, 2, 3, 4, 5].into_iter();
-            assert!(iter.next().unwrap() == 1);
-            assert!(iter.next().unwrap() == 2);
-            assert!(iter.next().unwrap() == 3);
-            assert!(iter.next().unwrap() == 4);
-            assert!(iter.next().unwrap() == 5);
+            assert_eq!(iter.next().unwrap(), 1);
+            assert_eq!(iter.next().unwrap(), 2);
+            assert_eq!(iter.next().unwrap(), 3);
+            assert_eq!(iter.next().unwrap(), 4);
+            assert_eq!(iter.next().unwrap(), 5);
         }
         {
             let mut iter = brr::Brr::from_iter(brr![1, 2, 3, 4, 5].into_iter()).into_iter();
-            assert!(iter.next().unwrap() == 1);
-            assert!(iter.next().unwrap() == 2);
-            assert!(iter.next().unwrap() == 3);
-            assert!(iter.next().unwrap() == 4);
-            assert!(iter.next().unwrap() == 5);
+            assert_eq!(iter.next().unwrap(), 1);
+            assert_eq!(iter.next().unwrap(), 2);
+            assert_eq!(iter.next().unwrap(), 3);
+            assert_eq!(iter.next().unwrap(), 4);
+            assert_eq!(iter.next().unwrap(), 5);
         }
     }
 }

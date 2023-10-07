@@ -468,7 +468,7 @@ impl<T: Clone + Default> Brr<T> {
                     return self.left.pop().unwrap();
                 }
             }
-            false => return T::default(),
+            false => T::default(),
         }
     }
     pub fn insert(&mut self, idx: usize, value: T) -> &Self {
@@ -627,6 +627,30 @@ impl<T: Clone + Default> Brr<T> {
             }
         }
         result.balance();
+        return result;
+    }
+    pub fn partition_if<F: Fn(&T, usize) -> bool>(&self, callback: F) -> Brr<Brr<T>> {
+        let mut result: Brr<Brr<T>> = Brr::new();
+        let mut left = Brr::new();
+        let mut right = Brr::new();
+
+        let length = self.length();
+        if length == 0 {
+            return result;
+        }
+        for index in 0..length {
+            if let Some(current) = self.get(index) {
+                if callback(current, index) {
+                    left.append(current.clone());
+                } else {
+                    right.append(current.clone());
+                }
+            }
+        }
+        left.balance();
+        right.balance();
+        result.prepend(left);
+        result.append(right);
         return result;
     }
 }
