@@ -13,6 +13,15 @@ impl fmt::Debug for brr::Brr<i32> {
             .finish();
     }
 }
+
+// fn main() {
+//     let brr: brr::Brr<(&str, i32)> = brr::zip(brr!["a", "b", "c", "d", "e"], brr![1, 2, 3, 4, 5]);
+//     println!(
+//         "{:?}",
+//         brr.to_vec().get(0).unwrap().1
+//     )
+// }
+
 fn main() {
     let amount = 100000;
     let mut bench_arr: Brr<i32> = brr![1; amount];

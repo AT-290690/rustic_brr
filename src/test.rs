@@ -406,7 +406,14 @@ mod tests {
         }
         {
             let brr: brr::Brr<(&str, i32)> = brr::zip(brr!["a", "b", "c"], brr![1, 2, 3]);
-            assert_eq!(brr.to_vec(), [("a", 1), ("b", 2), ("c", 3)])
+            assert_eq!(brr.to_vec(), [("a", 1), ("b", 2), ("c", 3)]);
+        }
+
+        {
+            let brr: brr::Brr<(&str, i32)> =
+                brr::zip(brr!["a", "b", "c", "d", "e"], brr![1, 2, 3, 4, 5]);
+            assert_eq!(brr.to_vec().get(0).unwrap().0, "a");
+            assert_eq!(brr.to_vec().get(0).unwrap().1, 1);
         }
     }
 
