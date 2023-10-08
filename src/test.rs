@@ -51,9 +51,9 @@ mod tests {
     fn swap() {
         assert_eq!(brr![1, 2, 3].swap(0, 1).to_vec(), vec![2, 1, 3]);
         {
-        let mut brr = brr![1, 2, 3, 4, 5];
-        assert_eq!(brr.swap_remove_left(2).to_vec(), vec![2, 3, 1, 5]);
-        assert_eq!(brr.swap_remove_right(2).to_vec(), vec![2, 3, 5])
+            let mut brr = brr![1, 2, 3, 4, 5];
+            assert_eq!(brr.swap_remove_left(2).to_vec(), vec![2, 3, 1, 5]);
+            assert_eq!(brr.swap_remove_right(2).to_vec(), vec![2, 3, 5])
         }
     }
     #[test]
@@ -242,11 +242,17 @@ mod tests {
     }
     #[test]
     fn partition_if() {
-        let out  = brr![1, 2, 3, 4, 5, 6].partition_if(|_, i| i % 2 == 1);
-        assert_eq!(out.to(|mut a, x, i| {
-            a.insert(i, x.to_vec());
-            a
-        }, Vec::new()), [[2, 4, 6], [1, 3, 5]]);
+        let out = brr![1, 2, 3, 4, 5, 6].partition_if(|_, i| i % 2 == 1);
+        assert_eq!(
+            out.to(
+                |mut a, x, i| {
+                    a.insert(i, x.to_vec());
+                    a
+                },
+                Vec::new()
+            ),
+            [[2, 4, 6], [1, 3, 5]]
+        );
     }
     #[test]
     fn for_each() {
@@ -323,9 +329,20 @@ mod tests {
     }
     #[test]
     fn adjacent() {
-        assert_eq!(brr![1, 2, 3, 4].adjacent_difference(|a, b| a + b).to_vec(), [1, 3, 5, 7]);
-        assert_eq!(brr![1, 2, 3, 4].adjacent_find(|a, b| a + b == 5).unwrap(), 3);
-        assert_eq!(brr![1, 2, 3, 4].adjacent_find_index(|a, b| a + b == 5).unwrap(), 2);
+        assert_eq!(
+            brr![1, 2, 3, 4].adjacent_difference(|a, b| a + b).to_vec(),
+            [1, 3, 5, 7]
+        );
+        assert_eq!(
+            brr![1, 2, 3, 4].adjacent_find(|a, b| a + b == 5).unwrap(),
+            3
+        );
+        assert_eq!(
+            brr![1, 2, 3, 4]
+                .adjacent_find_index(|a, b| a + b == 5)
+                .unwrap(),
+            2
+        );
     }
     #[test]
     fn iterator() {
@@ -344,6 +361,17 @@ mod tests {
             assert_eq!(iter.next().unwrap(), 3);
             assert_eq!(iter.next().unwrap(), 4);
             assert_eq!(iter.next().unwrap(), 5);
+        }
+    }
+    #[test]
+    fn zip() {
+        {
+            let mut arr: Vec<Vec<i32>> = Vec::new();
+            let brr = brr![1, 2, 3, 4].zip(brr![-1, -2, -3, -4]);
+            for i in 0..brr.length() {
+                arr.push(brr.get(i).unwrap().to_vec())
+            }
+            assert_eq!(arr, [[1, -1], [2, -2], [3, -3], [4, -4]]);
         }
     }
 }
