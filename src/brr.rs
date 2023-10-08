@@ -79,7 +79,7 @@ impl<T: Clone + Default> Brr<T> {
         }
         return result;
     }
-    pub fn to<F: Fn(B, &T, usize) -> B, B>(&self, callback: F, mut result: B) -> B {
+    pub fn fold<B, F: Fn(B, &T, usize) -> B>(&self, mut result: B, callback: F) -> B {
         let length = self.length();
         if length == 0 {
             return result;
@@ -87,6 +87,17 @@ impl<T: Clone + Default> Brr<T> {
         for index in 0..length {
             let current = self.get(index).unwrap();
             result = callback(result, current, index);
+        }
+        return result;
+    }
+    pub fn to<B, F: Fn(B, &T) -> B>(&self, mut result: B, callback: F) -> B {
+        let length = self.length();
+        if length == 0 {
+            return result;
+        }
+        for index in 0..length {
+            let current = self.get(index).unwrap();
+            result = callback(result, current);
         }
         return result;
     }
@@ -293,36 +304,6 @@ impl<T: Clone + Default> Brr<T> {
         let items = self.to_vec();
         return self.from_vec(items);
     }
-    // pub fn from_array(&mut self, items: [T; usize]) -> &mut Self {
-    //     self.clear();
-    //     let len = items.len();
-    //     if len == 0 {
-    //         return self;
-    //     } else if len == 1 {
-    //         self.right.push(items[0].clone());
-    //         return self;
-    //     }
-    //     let half = (len as f64 * 0.5).floor() as usize;
-    //     let mut left = half - 1;
-    //     let mut right = half;
-
-    //     loop {
-    //         self.left.push(items[left].clone());
-    //         if left == 0 {
-    //             break;
-    //         } else {
-    //             left -= 1
-    //         }
-    //     }
-    //     loop {
-    //         self.right.push(items[right].clone());
-    //         right += 1;
-    //         if right == len {
-    //             break;
-    //         }
-    //     }
-    //     return self;
-    // }
     pub fn from_vec(&mut self, items: Vec<T>) -> &mut Self {
         self.clear();
         let len = items.len();
@@ -842,4 +823,21 @@ pub fn flat<T: Clone + Default>(brr: Brr<Brr<T>>) -> Brr<T> {
     let mut result = Brr::new();
     result.from_vec(out);
     return result;
+}
+pub fn concat<T: Clone + Default>(arr: Vec<Brr<T>>) -> Brr<T> {
+    let mut out = Brr::new();
+    for i in 0..arr.len() {
+        out.concat(arr.get(i).unwrap());
+    }
+    return out;
+}
+pub fn range(start: usize, end: usize) -> Brr<usize> {
+    let mut out: Brr<usize> = Brr::new();
+    for i in start..(end / 2) {
+        out.prepend(i);
+    }
+    for i in (end / 2)..(end + 1) {
+        out.append(i);
+    }
+    return out;
 }

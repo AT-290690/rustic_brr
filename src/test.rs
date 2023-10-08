@@ -142,7 +142,6 @@ mod tests {
                             }
                         }
                     }
-
                     return stack;
                 })
                 .is_empty();
@@ -242,17 +241,41 @@ mod tests {
     }
     #[test]
     fn partition_if() {
-        let out = brr![1, 2, 3, 4, 5, 6].partition_if(|_, i| i % 2 == 1);
-        assert_eq!(
-            out.to(
-                |mut a, x, i| {
+        {
+            let out = brr![1, 2, 3, 4, 5, 6].partition_if(|_, i| i % 2 == 1);
+            assert_eq!(
+                out.fold(Vec::new(), |mut a, x, i| {
                     a.insert(i, x.to_vec());
                     a
-                },
-                Vec::new()
-            ),
-            [[2, 4, 6], [1, 3, 5]]
-        );
+                },),
+                [[2, 4, 6], [1, 3, 5]]
+            );
+        }
+        {
+            assert_eq!(
+                brr::flat(brr![1, 2, 3, 4, 5, 6].partition_if(|x, _| x % 2 != 0)).to_vec(),
+                [1, 3, 5, 2, 4, 6]
+            )
+        }
+        {
+            assert_eq!(
+                brr![1, 2, 3, 4, 5, 6]
+                    .partition_if(|x, _| x % 2 != 0)
+                    .to(brr::Brr::new(), |mut a, x| {
+                        a.concat(x);
+                        return a;
+                    })
+                    .to_vec(),
+                [1, 3, 5, 2, 4, 6]
+            )
+        }
+    }
+    #[test]
+    fn range() {
+        assert_eq!(brr::range(1, 5).to_vec(), vec![1, 2, 3, 4, 5]);
+        assert_eq!(brr::range(5, 10).to_vec(), vec![5, 6, 7, 8, 9, 10]);
+        assert_eq!(brr::range(1, 5).map(|x| x * 10).to_vec(), vec![10, 20, 30, 40, 50]);
+        assert_eq!(brr::range(1, 5).map(|x| x * 10).to(0, |a, b| a + b), 150);
     }
     #[test]
     fn for_each() {
@@ -298,6 +321,11 @@ mod tests {
             brr![1, 2, 3, 4, 5].concat(&brr::Brr::new()).to_vec(),
             [1, 2, 3, 4, 5]
         );
+
+        assert_eq!(
+            brr::concat(vec![brr![1, 2, 3], brr![4, 5, 6], brr![7, 8, 9]]).to_vec(),
+            brr![1, 2, 3, 4, 5, 6, 7, 8, 9].to_vec()
+        )
     }
     #[test]
     fn reverse() {
@@ -313,7 +341,7 @@ mod tests {
     }
     #[test]
     fn to() {
-        assert_eq!(brr![1, 2, 3, 4, 5].to(|a, b, _| a + b, 0), 15);
+        assert_eq!(brr![1, 2, 3, 4, 5].to(0, |a, b| a + b), 15);
     }
     #[test]
     fn common() {
@@ -377,11 +405,11 @@ mod tests {
 
     #[test]
     fn count() {
-        fn maximum_count (arr: Vec<i32>) -> usize {
+        fn maximum_count(arr: Vec<i32>) -> usize {
             let mut instance = brr::Brr::new();
             instance.from_vec(arr);
             return std::cmp::max(instance.count(|x| x < &0), instance.count(|x| x > &0));
-          }
-        assert_eq!(maximum_count(vec![-2,-1,-1,1,2,3]), 3);
+        }
+        assert_eq!(maximum_count(vec![-2, -1, -1, 1, 2, 3]), 3);
     }
 }

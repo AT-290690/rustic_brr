@@ -1,6 +1,8 @@
 use std::fmt;
-#[path = "src/brr.rs"] mod brr;
-#[path = "src/test.rs"] mod test;
+#[path = "src/brr.rs"]
+mod brr;
+#[path = "src/test.rs"]
+mod test;
 use crate::brr::Brr;
 impl fmt::Debug for brr::Brr<i32> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -11,7 +13,6 @@ impl fmt::Debug for brr::Brr<i32> {
             .finish();
     }
 }
-
 fn main() {
     let amount = 100000;
     let mut bench_arr: Brr<i32> = brr![1; amount];
@@ -43,7 +44,7 @@ fn main() {
     assert!(bench_arr.length() == 0 && bench_arr.left.len() - 1 == 0 && bench_arr.right.is_empty());
 
     let mut poor_vec = vec![1; amount];
-   
+
     let mut idx_bench: usize = 0;
     println!("vector of size {}", poor_vec.len());
     loop {

@@ -1,5 +1,5 @@
 [package]
-name = "rust-binary-array"
+name = "brr"
 version = "0.1.0"
 edition = "2021"
 
@@ -8,5 +8,5 @@ edition = "2021"
 [dependencies]
 
 [[bin]]
-name = "rust-binary-array"
+name = "brr"
 path = "main.rs"
