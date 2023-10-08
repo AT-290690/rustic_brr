@@ -29,13 +29,13 @@ mod tests {
     #[test]
     fn map() {
         let mut brr_arr = brr![1, 2, 3, 4, 5];
-        let brr_map = brr_arr.map(|x, i| x * 2 + i);
+        let brr_map = brr_arr.iterate(|x, i| x * 2 + i);
         assert_eq!(brr_map.to_vec(), vec![2, 5, 8, 11, 14]);
     }
     #[test]
     fn filter() {
         assert_eq!(
-            brr![1, 2, 3, 4, 5].filter(|x, _i| x % 2 == 0).to_vec(),
+            brr![1, 2, 3, 4, 5].filter(|x, _| x % 2 == 0).to_vec(),
             vec![2, 4]
         );
         assert_eq!(
@@ -79,7 +79,7 @@ mod tests {
             let right = ")".chars().next().unwrap();
             return brr::Brr::new()
                 .from_vec(str.to_string().chars().collect::<Vec<char>>())
-                .filter(|s, _| *s == left || *s == right)
+                .select(|s| *s == left || *s == right)
                 .transform(|mut stack, paren, _| {
                     match *paren == left {
                         true => {
@@ -120,7 +120,7 @@ mod tests {
         fn validate_parens(str: &str) -> bool {
             return brr::Brr::new()
                 .from_vec(str.to_string().split("").collect::<Vec<&str>>())
-                .filter(|s, _| *s == "(" || *s == ")")
+                .select(|s| *s == "(" || *s == ")")
                 .transform(|mut stack, paren, _| {
                     match *paren == "(" {
                         true => {
@@ -271,12 +271,12 @@ mod tests {
 
     #[test]
     fn find() {
-        assert_eq!(*brr![1, 2, 3, 4, 5].find(|x, _| *x == 3).unwrap(), 3);
-        assert_eq!(*brr![1, 2, 3, 4, 5].find(|x, _| *x == 5).unwrap(), 5);
-        assert_eq!(brr![1, 2, 3, 4, 5].find(|x, _| *x == 15), None);
-        assert_eq!(brr![1, 2, 3, 4, 5].find_index(|x, _| *x == 3).unwrap(), 2);
-        assert_eq!(brr![1, 2, 3, 4, 5].find_index(|x, _| *x == 5).unwrap(), 4);
-        assert_eq!(brr![1, 2, 3, 4, 5].find_index(|x, _| *x == 15), None);
+        assert_eq!(*brr![1, 2, 3, 4, 5].find(|x| *x == 3).unwrap(), 3);
+        assert_eq!(*brr![1, 2, 3, 4, 5].find(|x| *x == 5).unwrap(), 5);
+        assert_eq!(brr![1, 2, 3, 4, 5].find(|x| *x == 15), None);
+        assert_eq!(brr![1, 2, 3, 4, 5].find_index(|x| *x == 3).unwrap(), 2);
+        assert_eq!(brr![1, 2, 3, 4, 5].find_index(|x| *x == 5).unwrap(), 4);
+        assert_eq!(brr![1, 2, 3, 4, 5].find_index(|x| *x == 15), None);
     }
     #[test]
     fn concat() {
@@ -305,11 +305,11 @@ mod tests {
     }
     #[test]
     fn some_every() {
-        assert_eq!(brr![1, 2, 3, 4, 5].some(|x, _| *x == 2), true);
-        assert_eq!(brr![1, 2, 3, 4, 5].some(|x, _| *x == 10), false);
-        assert_eq!(brr![1, 2, 3, 4, 5].every(|x, _| *x == 2), false);
-        assert_eq!(brr![1, 2, 3, 4, 5].every(|x, _| *x < 10), true);
-        assert_eq!(brr![2, 4, 6, 8].every(|x, _| *x % 2 == 0), true)
+        assert_eq!(brr![1, 2, 3, 4, 5].some(|x| *x == 2), true);
+        assert_eq!(brr![1, 2, 3, 4, 5].some(|x| *x == 10), false);
+        assert_eq!(brr![1, 2, 3, 4, 5].every(|x| *x == 2), false);
+        assert_eq!(brr![1, 2, 3, 4, 5].every(|x| *x < 10), true);
+        assert_eq!(brr![2, 4, 6, 8].every(|x| *x % 2 == 0), true)
     }
     #[test]
     fn to() {
@@ -319,8 +319,8 @@ mod tests {
     fn common() {
         assert_eq!(
             brr![1, 2, 3, 4, 5, 6, 7, 8]
-                .filter(|x, _| x % 2 == 0)
-                .map(|x, _| x * 3)
+                .select(|x| x % 2 == 0)
+                .map(|x| x * 3)
                 .rotate(-2)
                 .slice(1, 4)
                 .to_vec(),
@@ -373,5 +373,15 @@ mod tests {
             }
             assert_eq!(arr, [[1, -1], [2, -2], [3, -3], [4, -4]]);
         }
+    }
+
+    #[test]
+    fn count() {
+        fn maximum_count (arr: Vec<i32>) -> usize {
+            let mut instance = brr::Brr::new();
+            instance.from_vec(arr);
+            return std::cmp::max(instance.count(|x| x < &0), instance.count(|x| x > &0));
+          }
+        assert_eq!(maximum_count(vec![-2,-1,-1,1,2,3]), 3);
     }
 }

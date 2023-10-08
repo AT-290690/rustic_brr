@@ -11,14 +11,14 @@ remove O(1)
 access O(1)  
 memory O(N)
 
-This is Rust version of my JavaScript https://github.com/AT-290690/brrr 
+This is Rust version of my JavaScript https://github.com/AT-290690/brrr
 
 There is a simple benchmark vs vector in main.rs
 (bump up N - Brr goes first and vec second. Diff is noticible the bigger N)
 
 cargo run
 
-cargo test 
+cargo test
 
 Structure
 
@@ -51,26 +51,29 @@ Indexing is guaranteed without the need of reordering thanks to simple arithmeti
 
 [0, 1, 2, 3, 4, 5, 6, 7, 8]
 ```
-How it works? It never adds or removes from the front. 
-Uses 2 vectors and only pushes and pops. 
+
+How it works? It never adds or removes from the front.
+Uses 2 vectors and only pushes and pops.
 And keeps constant indexing using the above logic.
 
 Very, very, very rarly it balances the two vectors (Once on every COMPLETE removals of 1 branch vector or... never).
 
-Original vector shifts and unshifts for operations at the start making insertions/deletions O(N) 
+Original vector shifts and unshifts for operations at the start making insertions/deletions O(N)
 Brr has them in O(1) + keeping the access O(1).
 
 And not only that, comes with batteries included. A familiar API for common array operations like map, filter and rotate.
 
 ```rust
 brr![1, 2, 3, 4, 5, 6, 7, 8]
-  .filter(|x, _| x % 2 == 0)
-  .map(|x, _| x * 3)
+  .select(|x| x % 2 == 0)
+  .map(|x| x * 3)
   .rotate(-2)
   .slice(1, 4)
   .to_vec() // -> [24, 6, 12]
 ```
+
 So you can go brrrrrrr!
+
 <p align="center">
 <img width="300" src="https://media.tenor.com/m3X-prXhi9QAAAAC/hacking-crabby-crab.gif"/>
 </p>

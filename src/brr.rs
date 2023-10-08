@@ -90,12 +90,12 @@ impl<T: Clone + Default> Brr<T> {
         }
         return result;
     }
-    pub fn find<F: Fn(&T, usize) -> bool>(&self, callback: F) -> Option<&T> {
+    pub fn find<F: Fn(&T) -> bool>(&self, callback: F) -> Option<&T> {
         let length = self.length();
         for i in 0..length {
             match self.get(i) {
                 Some(f) => {
-                    if callback(f, i) {
+                    if callback(f) {
                         return Some(f);
                     }
                 }
@@ -104,12 +104,12 @@ impl<T: Clone + Default> Brr<T> {
         }
         return None;
     }
-    pub fn find_index<F: Fn(&T, usize) -> bool>(&self, callback: F) -> Option<usize> {
+    pub fn find_index<F: Fn(&T) -> bool>(&self, callback: F) -> Option<usize> {
         let length = self.length();
         for i in 0..length {
             match self.get(i) {
                 Some(f) => {
-                    if callback(f, i) {
+                    if callback(f) {
                         return Some(i);
                     }
                 }
@@ -136,20 +136,20 @@ impl<T: Clone + Default> Brr<T> {
         self.right = left;
         return self;
     }
-    pub fn some<F: Fn(&T, usize) -> bool>(&mut self, callback: F) -> bool {
+    pub fn some<F: Fn(&T) -> bool>(&mut self, callback: F) -> bool {
         for index in 0..self.length() {
             let current = self.get(index).unwrap();
-            if callback(current, index) {
+            if callback(current) {
                 return true;
             }
         }
         return false;
     }
-    pub fn every<F: Fn(&T, usize) -> bool>(&mut self, callback: F) -> bool {
+    pub fn every<F: Fn(&T) -> bool>(&mut self, callback: F) -> bool {
         let length = self.length();
         for index in 0..length {
             let current = self.get(index).unwrap();
-            if index == length || !callback(current, index) {
+            if index == length || !callback(current) {
                 return false;
             }
         }
@@ -293,6 +293,36 @@ impl<T: Clone + Default> Brr<T> {
         let items = self.to_vec();
         return self.from_vec(items);
     }
+    // pub fn from_array(&mut self, items: [T; usize]) -> &mut Self {
+    //     self.clear();
+    //     let len = items.len();
+    //     if len == 0 {
+    //         return self;
+    //     } else if len == 1 {
+    //         self.right.push(items[0].clone());
+    //         return self;
+    //     }
+    //     let half = (len as f64 * 0.5).floor() as usize;
+    //     let mut left = half - 1;
+    //     let mut right = half;
+
+    //     loop {
+    //         self.left.push(items[left].clone());
+    //         if left == 0 {
+    //             break;
+    //         } else {
+    //             left -= 1
+    //         }
+    //     }
+    //     loop {
+    //         self.right.push(items[right].clone());
+    //         right += 1;
+    //         if right == len {
+    //             break;
+    //         }
+    //     }
+    //     return self;
+    // }
     pub fn from_vec(&mut self, items: Vec<T>) -> &mut Self {
         self.clear();
         let len = items.len();
@@ -361,7 +391,30 @@ impl<T: Clone + Default> Brr<T> {
     /// callback_fn — A function that accepts 2 arguments (value, index)
     ///
     /// The result is a new array
-    pub fn map<F: Fn(&T, usize) -> T>(&mut self, callback: F) -> Brr<T> {
+    pub fn map<F: Fn(&T) -> T>(&mut self, callback: F) -> Brr<T> {
+        let mut out: Brr<T> = Brr::new();
+        let len = self.length();
+        let half = (len as f64 * 0.5).floor() as usize;
+        let mut left = half - 1;
+        let mut right = half;
+        loop {
+            out.left.push(callback(self.get(left).unwrap()));
+            if left == 0 {
+                break;
+            } else {
+                left -= 1
+            }
+        }
+        loop {
+            out.right.push(callback(self.get(right).unwrap()));
+            right += 1;
+            if right == len {
+                break;
+            }
+        }
+        return out;
+    }
+    pub fn iterate<F: Fn(&T, usize) -> T>(&mut self, callback: F) -> Brr<T> {
         let mut out: Brr<T> = Brr::new();
         let len = self.length();
         let half = (len as f64 * 0.5).floor() as usize;
@@ -486,11 +539,11 @@ impl<T: Clone + Default> Brr<T> {
         self.set(index, val);
         return self;
     }
-    pub fn count<F: Fn(&T, usize) -> bool>(&mut self, callback: F) -> usize {
+    pub fn count<F: Fn(&T) -> bool>(&mut self, callback: F) -> usize {
         let mut out = 0;
         for index in 0..self.length() {
             let current = self.get(index).unwrap();
-            if callback(current, index) {
+            if callback(current) {
                 out += 1;
             }
         }

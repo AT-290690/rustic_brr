@@ -1,7 +1,6 @@
 use std::fmt;
 #[path = "src/brr.rs"] mod brr;
 #[path = "src/test.rs"] mod test;
-
 use crate::brr::Brr;
 impl fmt::Debug for brr::Brr<i32> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -12,6 +11,7 @@ impl fmt::Debug for brr::Brr<i32> {
             .finish();
     }
 }
+
 fn main() {
     let amount = 100000;
     let mut bench_arr: Brr<i32> = brr![1; amount];
