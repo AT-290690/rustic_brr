@@ -841,3 +841,14 @@ pub fn range(start: usize, end: usize) -> Brr<usize> {
     }
     return out;
 }
+pub fn zip<A: Clone + Default, B: Clone + Default>(a: Brr<A>, b: Brr<B>) -> Brr<(A, B)> {
+    let mut output: Brr<(A, B)> = Brr::new();
+    let end = a.length();
+    for i in 0..(end / 2) {
+        output.prepend((a.get(i).unwrap().clone(), b.get(i).unwrap().clone()));
+    }
+    for i in (end / 2)..end {
+        output.append((a.get(i).unwrap().clone(), b.get(i).unwrap().clone()));
+    }
+    return output;
+}

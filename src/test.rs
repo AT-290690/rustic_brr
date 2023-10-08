@@ -274,7 +274,10 @@ mod tests {
     fn range() {
         assert_eq!(brr::range(1, 5).to_vec(), vec![1, 2, 3, 4, 5]);
         assert_eq!(brr::range(5, 10).to_vec(), vec![5, 6, 7, 8, 9, 10]);
-        assert_eq!(brr::range(1, 5).map(|x| x * 10).to_vec(), vec![10, 20, 30, 40, 50]);
+        assert_eq!(
+            brr::range(1, 5).map(|x| x * 10).to_vec(),
+            vec![10, 20, 30, 40, 50]
+        );
         assert_eq!(brr::range(1, 5).map(|x| x * 10).to(0, |a, b| a + b), 150);
     }
     #[test]
@@ -400,6 +403,10 @@ mod tests {
                 arr.push(brr.get(i).unwrap().to_vec())
             }
             assert_eq!(arr, [[1, -1], [2, -2], [3, -3], [4, -4]]);
+        }
+        {
+            let brr: brr::Brr<(&str, i32)> = brr::zip(brr!["a", "b", "c"], brr![1, 2, 3]);
+            assert_eq!(brr.to_vec(), [("a", 1), ("b", 2), ("c", 3)])
         }
     }
 
